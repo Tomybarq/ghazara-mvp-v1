@@ -8,6 +8,7 @@ interface FloatingWhatsAppWidgetProps {
 
 export default function FloatingWhatsAppWidget({ language }: FloatingWhatsAppWidgetProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const ar = language === "ar";
 
   const message = encodeURIComponent(
@@ -21,11 +22,12 @@ export default function FloatingWhatsAppWidget({ language }: FloatingWhatsAppWid
     ? "مرحباً بك! كيف يمكننا مساعدتك في نمو أعمالك اليوم؟"
     : "Hello! How can we help grow your business today?";
   const chatButtonText = ar ? "ابدأ المحادثة عبر واتساب" : "Start WhatsApp Chat";
+  const tooltipText = ar ? "تواصل معنا عبر واتساب" : "Chat with us on WhatsApp";
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
       {isOpen && (
-        <div className="mb-4 w-80 overflow-hidden rounded-2xl border border-border bg-card text-card-foreground shadow-2xl transition-all animate-in fade-in slide-in-from-bottom-3">
+        <div className="mb-4 w-80 overflow-hidden rounded-2xl border border-border bg-card text-card-foreground shadow-2xl transition-all duration-300 animate-in fade-in slide-in-from-bottom-3">
           <div className="bg-[#25D366] p-4 text-white">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -42,7 +44,7 @@ export default function FloatingWhatsAppWidget({ language }: FloatingWhatsAppWid
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
-                className="grid h-7 w-7 place-items-center rounded-full hover:bg-black/10"
+                className="grid h-7 w-7 place-items-center rounded-full hover:bg-black/10 transition-colors"
                 aria-label={ar ? "إغلاق" : "Close"}
               >
                 <X size={16} />
@@ -57,7 +59,7 @@ export default function FloatingWhatsAppWidget({ language }: FloatingWhatsAppWid
               href={`https://wa.me/${WA_PHONE}?text=${message}`}
               target="_blank"
               rel="noreferrer"
-              className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] py-3 text-xs font-bold text-white transition hover:bg-[#20ba5a]"
+              className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] py-3 text-xs font-bold text-white transition-all duration-200 hover:bg-[#20ba5a] hover:shadow-lg active:scale-[0.98]"
             >
               <MessageCircle size={16} />
               {chatButtonText}
@@ -66,20 +68,39 @@ export default function FloatingWhatsAppWidget({ language }: FloatingWhatsAppWid
         </div>
       )}
 
-      <button
-        type="button"
-        onClick={() => setIsOpen((prev) => !prev)}
-        className="group relative flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-[0_10px_25px_rgba(37,211,102,.4)] transition hover:scale-105 active:scale-95"
-        aria-label={ar ? "تواصل عبر واتساب" : "Chat on WhatsApp"}
-      >
-        <MessageCircle size={28} className="transition group-hover:scale-110" />
-        <span className="absolute -top-1 -right-1 flex h-4 w-4">
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#25D366] opacity-75" />
-          <span className="relative inline-flex h-4 w-4 rounded-full bg-emerald-600 text-[9px] font-bold text-white items-center justify-center">
-            1
+      <div className="relative flex items-center">
+        {/* Tooltip */}
+        <div
+          role="tooltip"
+          aria-hidden={!isHovered}
+          className={`absolute right-16 whitespace-nowrap rounded-xl bg-card border border-border px-3.5 py-2 text-xs font-bold text-foreground shadow-xl transition-all duration-300 pointer-events-none ${
+            isHovered ? "opacity-100 translate-x-0 scale-100" : "opacity-0 translate-x-2 scale-95"
+          }`}
+        >
+          {tooltipText}
+          <div className="absolute top-1/2 -right-1.5 -translate-y-1/2 border-y-4 border-y-transparent border-l-6 border-l-border" />
+        </div>
+
+        {/* Floating Button with pulsing and bounce animation */}
+        <button
+          type="button"
+          onClick={() => setIsOpen((prev) => !prev)}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          onFocus={() => setIsHovered(true)}
+          onBlur={() => setIsHovered(false)}
+          className="group relative flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-[0_10px_25px_rgba(37,211,102,.45)] transition-all duration-300 hover:scale-110 active:scale-95 animate-bounce hover:animate-none"
+          aria-label={ar ? "تواصل عبر واتساب" : "Chat on WhatsApp"}
+        >
+          <MessageCircle size={28} className="transition-transform duration-300 group-hover:rotate-12" />
+          <span className="absolute -top-1 -right-1 flex h-4 w-4">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#25D366] opacity-75" />
+            <span className="relative inline-flex h-4 w-4 rounded-full bg-emerald-600 text-[9px] font-bold text-white items-center justify-center">
+              1
+            </span>
           </span>
-        </span>
-      </button>
+        </button>
+      </div>
     </div>
   );
 }
