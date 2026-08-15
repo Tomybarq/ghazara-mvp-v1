@@ -41,7 +41,7 @@ export interface RFQDraft {
   notes: string;
 }
 
-export const WA_PHONE = "967784984528";
+export const WA_PHONE = "967779030679";
 
 export const SECTORS: readonly Sector[] = [
   {
