@@ -23,17 +23,17 @@ export default function ContactPage() {
   const rfqMutation = trpc.rfq.submit.useMutation({
     onSuccess: () => {
       setSubmitted(true);
-      toast.success(t.rfq.successMsg);
+      toast.success(t.rfq.successTitle);
     },
     onError: () => {
-      toast.error(ar ? "حدث خطأ أثناء إرسال الطلب، يرجى المحاولة مرة أخرى." : "Error submitting request, please try again.");
+      toast.error(t.rfq.errorMsg);
     }
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!clientName || !companyName) {
-      toast.error(ar ? "يرجى تعبئة الحقول الإجبارية." : "Please fill in required fields.");
+    if (!clientName.trim() || !companyName.trim()) {
+      toast.error(t.rfq.requiredMsg);
       return;
     }
     rfqMutation.mutate({
@@ -112,22 +112,30 @@ export default function ContactPage() {
             {/* Form Column */}
             <div className="lg:col-span-2 bg-card border border-border rounded-3xl p-8 sm:p-10 shadow-xs">
               {submitted ? (
-                <div className="py-16 text-center space-y-4">
+                <div className="rfq-success-card py-16 text-center space-y-4" role="status" aria-live="polite">
                   <div className="w-16 h-16 rounded-full bg-emerald-500/10 text-emerald-600 flex items-center justify-center mx-auto">
                     <CheckCircle2 className="w-8 h-8" />
                   </div>
-                  <h3 className="text-2xl font-bold">{ar ? "تم إرسال طلبك بنجاح!" : "Request Sent Successfully!"}</h3>
-                  <p className="text-muted-foreground max-w-md mx-auto">{t.rfq.successMsg}</p>
+                  <h3 className="text-2xl font-bold">{t.rfq.successTitle}</h3>
+                  <p className="text-muted-foreground max-w-md mx-auto leading-7">{t.rfq.successMsg}</p>
                   <button
                     type="button"
-                    onClick={() => setSubmitted(false)}
+                    onClick={() => {
+                      setSubmitted(false);
+                      setSector("retail");
+                      setService("trade");
+                      setRegion("ye");
+                      setClientName("");
+                      setCompanyName("");
+                      setNotes("");
+                    }}
                     className="route-button route-button-outline px-6 py-2.5 text-xs mt-4"
                   >
-                    {ar ? "إرسال طلب آخر" : "Submit Another Request"}
+                    {t.rfq.successAction}
                   </button>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-6" aria-busy={rfqMutation.isPending}>
                   <h3 className="font-heading font-bold text-xl mb-6">{ar ? "نموذج طلب عرض سعر / استشارة" : "RFQ / Consultation Form"}</h3>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -208,13 +216,20 @@ export default function ContactPage() {
                     ></textarea>
                   </div>
 
+                  {rfqMutation.isPending && (
+                    <div className="rfq-loading-state" role="status" aria-live="polite">
+                      <Send className="w-4 h-4 animate-pulse" aria-hidden="true" />
+                      <span>{t.rfq.loadingMsg}</span>
+                    </div>
+                  )}
                   <button
                     type="submit"
                     disabled={rfqMutation.isPending}
-                    className="route-button route-button-primary w-full h-14 text-sm font-bold flex items-center justify-center gap-2"
+                    aria-disabled={rfqMutation.isPending}
+                    className="route-button route-button-primary w-full h-14 text-sm font-bold flex items-center justify-center gap-2 disabled:cursor-wait disabled:opacity-70"
                   >
-                    <Send className="w-4 h-4" />
-                    <span>{rfqMutation.isPending ? (ar ? "جاري الإرسال..." : "Submitting...") : t.rfq.submitBtn}</span>
+                    <Send className={`w-4 h-4 ${rfqMutation.isPending ? "animate-pulse" : ""}`} aria-hidden="true" />
+                    <span>{rfqMutation.isPending ? t.rfq.loadingMsg : t.rfq.submitBtn}</span>
                   </button>
                 </form>
               )}

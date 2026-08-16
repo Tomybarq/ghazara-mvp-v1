@@ -23,17 +23,17 @@ export default function RfqForm({ lang }: RfqFormProps) {
   const rfqMutation = trpc.rfq.submit.useMutation({
     onSuccess: () => {
       setIsSubmitted(true);
-      toast.success(t.successMsg);
+      toast.success(t.successTitle);
     },
-    onError: (err) => {
-      toast.error(err.message || (isAr ? "حدث خطأ أثناء إرسال الطلب، يرجى المحاولة لاحقاً." : "An error occurred while submitting your request."));
+    onError: () => {
+      toast.error(t.errorMsg);
     },
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!clientName.trim() || !companyName.trim()) {
-      toast.error(isAr ? "يرجى إدخال اسم المسؤول واسم الشركة" : "Please enter contact name and company name");
+      toast.error(t.requiredMsg);
       return;
     }
 
@@ -64,30 +64,33 @@ export default function RfqForm({ lang }: RfqFormProps) {
 
         <div className="max-w-2xl mx-auto bg-card border border-border rounded-3xl p-8 md:p-12 shadow-xl">
           {isSubmitted ? (
-            <div className="text-center py-12 space-y-6 animate-in fade-in zoom-in-95">
+            <div className="rfq-success-card text-center py-12 space-y-6" role="status" aria-live="polite">
               <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto text-primary">
                 <CheckCircle2 className="w-10 h-10" />
               </div>
-              <h3 className="font-heading font-bold text-2xl text-foreground">
-                {isAr ? "تم استلام طلبك بنجاح!" : "Request Received Successfully!"}
+                <h3 className="font-heading font-bold text-2xl text-foreground">
+                {t.successTitle}
               </h3>
-              <p className="text-muted-foreground max-w-md mx-auto">
+                <p className="text-muted-foreground max-w-md mx-auto leading-7">
                 {t.successMsg}
               </p>
               <button
                 onClick={() => {
                   setIsSubmitted(false);
+                  setSector("retail");
+                  setService("trade");
+                  setRegion("ye");
                   setClientName("");
                   setCompanyName("");
                   setNotes("");
                 }}
                 className="route-button route-button-primary px-8 py-3 text-sm"
               >
-                {isAr ? "إرسال طلب آخر" : "Submit Another Request"}
+                {t.successAction}
               </button>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6" aria-busy={rfqMutation.isPending}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Sector */}
                 <div className="space-y-2">
@@ -190,15 +193,22 @@ export default function RfqForm({ lang }: RfqFormProps) {
                 />
               </div>
 
+              {rfqMutation.isPending && (
+                <div className="rfq-loading-state" role="status" aria-live="polite">
+                  <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
+                  <span>{t.loadingMsg}</span>
+                </div>
+              )}
               <button
                 type="submit"
                 disabled={rfqMutation.isPending}
-                className="w-full route-button route-button-primary py-4 text-base flex items-center justify-center gap-2 shadow-lg"
+                aria-disabled={rfqMutation.isPending}
+                className="w-full route-button route-button-primary py-4 text-base flex items-center justify-center gap-2 shadow-lg disabled:cursor-wait disabled:opacity-70"
               >
                 {rfqMutation.isPending ? (
                   <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    <span>{isAr ? "جاري الإرسال..." : "Submitting..."}</span>
+                    <Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" />
+                    <span>{t.loadingMsg}</span>
                   </>
                 ) : (
                   <>
