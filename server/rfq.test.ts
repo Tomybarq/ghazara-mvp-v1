@@ -34,6 +34,20 @@ describe("rfq.submit", () => {
     expect(createRfqRequest).toHaveBeenCalledWith({ ...payload, notes: payload.notes });
   });
 
+  it("rejects the request when persistence is unavailable", async () => {
+    createRfqRequest.mockResolvedValueOnce(false);
+
+    await expect(
+      appRouter.createCaller(createPublicContext()).rfq.submit({
+        sector: "agriculture",
+        service: "representation",
+        region: "aden",
+        clientName: "ليان أحمد",
+        companyName: "شركة المسار",
+      }),
+    ).rejects.toMatchObject({ code: "SERVICE_UNAVAILABLE" });
+  });
+
   it("rejects an incomplete RFQ request", async () => {
     await expect(
       appRouter.createCaller(createPublicContext()).rfq.submit({

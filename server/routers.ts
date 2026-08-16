@@ -1,5 +1,6 @@
 import { COOKIE_NAME } from "@shared/const";
 import { z } from "zod";
+import { TRPCError } from "@trpc/server";
 import { createRfqRequest } from "./db";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
@@ -30,17 +31,24 @@ export const appRouter = router({
           notes: z.string().trim().max(1200).optional(),
         }),
       )
-      .mutation(async ({ input }) => {
-        const saved = await createRfqRequest({
+	      .mutation(async ({ input }) => {
+	        const saved = await createRfqRequest({
           sector: input.sector,
           service: input.service,
           region: input.region,
           clientName: input.clientName,
           companyName: input.companyName,
-          notes: input.notes || null,
-        });
+	          notes: input.notes || null,
+	        });
 
-        return { saved } as const;
+	        if (!saved) {
+	          throw new TRPCError({
+	            code: "SERVICE_UNAVAILABLE",
+	            message: "RFQ storage is unavailable",
+	          });
+	        }
+
+	        return { saved } as const;
       }),
   }),
 });
