@@ -1,5 +1,6 @@
 import { content } from "@/data/content";
-import { Mail, MapPin, Phone, ArrowUpRight } from "lucide-react";
+import { Mail, MapPin, Phone } from "lucide-react";
+import { Logo } from "@/components/ui/Logo";
 
 interface FooterProps {
   lang: "ar" | "en";
@@ -14,10 +15,7 @@ export default function Footer({ lang }: FooterProps) {
         {/* Brand Column */}
         <div className="md:col-span-2 space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary to-amethyst flex items-center justify-center text-white font-heading font-bold text-lg shadow-md">
-              {lang === "ar" ? "غ" : "G"}
-            </div>
-            <span className="font-heading font-bold text-xl">{t.brandName}</span>
+            <Logo variant="transparent" size="md" />
           </div>
           <p className="text-sm text-muted-foreground max-w-md leading-relaxed">
             {t.footer.about}

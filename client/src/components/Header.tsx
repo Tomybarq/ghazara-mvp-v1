@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { content } from "@/data/content";
 import { Globe, Menu, X, ArrowUpRight } from "lucide-react";
+import { Logo } from "@/components/ui/Logo";
 
 interface HeaderProps {
   lang: "ar" | "en";
@@ -31,24 +32,14 @@ export default function Header({ lang, setLang }: HeaderProps) {
     <header
       className={`fixed top-0 right-0 left-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? "bg-background/85 backdrop-blur-md border-b border-border shadow-sm py-3"
+          ? "bg-background/90 backdrop-blur-md border-b border-border shadow-xs py-3"
           : "bg-transparent py-5"
       }`}
     >
       <div className="content-wrap flex items-center justify-between">
         {/* Brand Logo */}
         <a href="#hero" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary to-amethyst flex items-center justify-center text-white font-heading font-bold text-lg shadow-md group-hover:scale-105 transition-transform">
-            {lang === "ar" ? "غ" : "G"}
-          </div>
-          <div className="flex flex-col">
-            <span className="font-heading font-bold text-lg leading-tight text-foreground">
-              {t.brandShort}
-            </span>
-            <span className="text-[10px] text-muted-foreground uppercase tracking-widest">
-              {lang === "ar" ? "Ghazara" : "Trading & Marketing"}
-            </span>
-          </div>
+          <Logo variant="transparent" size="sm" priority />
         </a>
 
         {/* Desktop Navigation */}
@@ -61,6 +52,9 @@ export default function Header({ lang, setLang }: HeaderProps) {
           </a>
           <a href="#services" className="text-sm font-medium hover:text-primary transition-colors">
             {t.nav.services}
+          </a>
+          <a href="#products" className="text-sm font-medium hover:text-primary transition-colors">
+            {t.nav.products}
           </a>
           <a href="#rfq" className="text-sm font-medium hover:text-primary transition-colors">
             {t.nav.requestQuote}
@@ -127,6 +121,13 @@ export default function Header({ lang, setLang }: HeaderProps) {
             className="text-base font-medium py-2 border-b border-border/50"
           >
             {t.nav.services}
+          </a>
+          <a
+            href="#products"
+            onClick={() => setMobileMenuOpen(false)}
+            className="text-base font-medium py-2 border-b border-border/50"
+          >
+            {t.nav.products}
           </a>
           <a
             href="#rfq"

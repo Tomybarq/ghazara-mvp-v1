@@ -11,14 +11,25 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import Hub from "./pages/Hub";
+import AboutPage from "./pages/AboutPage";
+import ProductsPage from "./pages/ProductsPage";
+import ServicesPage from "./pages/ServicesPage";
+import ProjectsPage from "./pages/ProjectsPage";
+import BlogPage from "./pages/BlogPage";
+import ContactPage from "./pages/ContactPage";
 
 function Router() {
-  // make sure to consider if you need authentication for certain routes
   return (
     <>
       <Switch>
         <Route path="/" component={Home} />
         <Route path="/hub" component={Hub} />
+        <Route path="/about" component={AboutPage} />
+        <Route path="/products" component={ProductsPage} />
+        <Route path="/services" component={ServicesPage} />
+        <Route path="/projects" component={ProjectsPage} />
+        <Route path="/blog" component={BlogPage} />
+        <Route path="/contact" component={ContactPage} />
         <Route path="/404" component={NotFound} />
         <Route component={NotFound} />
       </Switch>
