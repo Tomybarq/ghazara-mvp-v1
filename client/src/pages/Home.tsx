@@ -1,129 +1,408 @@
-import { useState } from "react";
-import { content } from "@/data/content";
+import { useLanguage } from "@/contexts/LanguageContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Logo } from "@/components/ui/Logo";
-import { ArrowLeft, ArrowRight, CheckCircle2, ShieldCheck, TrendingUp, Briefcase, Code, LineChart, ExternalLink } from "lucide-react";
+import SEOHead from "@/components/seo/SEOHead";
+import { servicesData } from "@/data/services";
+import { productsData } from "@/data/products";
+import { contactData } from "@/data/contact";
+import {
+  ArrowRight,
+  Briefcase,
+  TrendingUp,
+  Code,
+  LineChart,
+  ShieldCheck,
+  Search,
+  Compass,
+  CheckCircle2,
+  ExternalLink,
+  MessageCircle,
+  Layers,
+  Sparkles,
+  ArrowUpRight,
+} from "lucide-react";
 import { Link } from "wouter";
 
 export default function Home() {
-  const [lang, setLang] = useState<"ar" | "en">("ar");
-  const t = content[lang];
-  const ar = lang === "ar";
+  const { lang, isAr } = useLanguage();
+
+  const getServiceIcon = (iconName: string) => {
+    switch (iconName) {
+      case "Briefcase":
+        return <Briefcase className="w-6 h-6" />;
+      case "TrendingUp":
+        return <TrendingUp className="w-6 h-6" />;
+      case "Code":
+        return <Code className="w-6 h-6" />;
+      case "LineChart":
+        return <LineChart className="w-6 h-6" />;
+      default:
+        return <Briefcase className="w-6 h-6" />;
+    }
+  };
 
   return (
-    <div className="site-shell bg-background text-foreground min-h-screen flex flex-col" dir={ar ? "rtl" : "ltr"}>
-      <Header lang={lang} setLang={setLang} />
+    <div className="site-shell bg-background text-foreground min-h-screen flex flex-col">
+      <SEOHead pageKey="home" />
+      <Header />
 
       <main className="flex-1">
-        {/* Hero Section */}
-        <section id="hero" className="relative pt-32 pb-24 lg:pt-40 lg:pb-32 bg-gradient-to-b from-card to-background overflow-hidden">
-          <div className="content-wrap grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
-              <span className="eyebrow inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
-                {t.hero.eyebrow}
-              </span>
-              <h1 className="text-4xl sm:text-6xl font-bold tracking-tight leading-[1.1]">
-                {t.hero.title1}{" "}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-amber-500">
-                  {t.hero.titleHighlight}
+        {/* 1. Hero Section: Direct Positioning & Value Proposition */}
+        <section
+          id="hero"
+          className="relative pt-32 pb-20 lg:pt-40 lg:pb-28 bg-gradient-to-b from-card to-background overflow-hidden border-b border-border"
+        >
+          <div className="content-wrap grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <div className="lg:col-span-7 space-y-6">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold">
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>
+                  {isAr
+                    ? "مؤسسة غزارة للتجارة والتسويق"
+                    : "Ghazara Trading & Marketing"}
                 </span>
+              </div>
+
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold font-heading tracking-tight leading-[1.18]">
+                {isAr ? (
+                  <>
+                    حلول تجارية وتسويقية تساعد الأعمال على{" "}
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-amber-500">
+                      النمو بوضوح
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    Commercial & marketing solutions that help businesses{" "}
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-amber-500">
+                      grow with clarity
+                    </span>
+                  </>
+                )}
               </h1>
-              <p className="text-lg text-muted-foreground leading-relaxed max-w-xl">
-                {t.hero.description}
+
+              <p className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-2xl">
+                {isAr
+                  ? "شريكك المؤسسي في إدارة التمثيل التجاري، تيسير سلاسل التوريد، التسويق الرقمي القائم على الأداء، وبناء المنصات التقنية الموثوقة في اليمن والمنطقة."
+                  : "Your strategic corporate partner in commercial representation, supply chain facilitation, performance digital marketing, and robust tech platforms in Yemen and the region."}
               </p>
-              <div className="flex flex-wrap gap-4 pt-4">
-                <Link href="/contact" className="route-button route-button-primary h-14 px-8 text-sm font-bold flex items-center gap-2">
-                  <span>{t.hero.ctaPrimary}</span>
-                  <ArrowRight className={`w-4 h-4 ${ar ? "rotate-180" : ""}`} />
+
+              <div className="flex flex-wrap gap-4 pt-2">
+                <Link
+                  href="/request-quote"
+                  className="route-button route-button-primary h-13 px-8 text-sm font-bold flex items-center gap-2 shadow-md hover:shadow-lg transition"
+                >
+                  <span>{isAr ? "اطلب عرض سعر أو استشارة" : "Request Quote or Advisory"}</span>
+                  <ArrowRight className={`w-4 h-4 ${isAr ? "rotate-180" : ""}`} />
                 </Link>
-                <a href="#services" className="route-button route-button-outline h-14 px-8 text-sm font-bold">
-                  {t.hero.ctaSecondary}
-                </a>
+                <Link
+                  href="/services"
+                  className="route-button route-button-outline h-13 px-7 text-sm font-bold flex items-center gap-2"
+                >
+                  <span>{isAr ? "استعراض الخدمات" : "Explore Services"}</span>
+                </Link>
               </div>
             </div>
 
-            <div className="bg-card border border-border rounded-3xl p-8 shadow-lg relative">
-              <div className="absolute -top-4 -right-4 bg-primary text-primary-foreground text-xs font-bold px-4 py-2 rounded-2xl shadow-md">
-                {ar ? "موثوقية مؤسسية" : "Enterprise Trust"}
-              </div>
-              <div className="space-y-6">
-                <Logo variant="transparent" size="lg" />
+            <div className="lg:col-span-5">
+              <div className="bg-card border border-border rounded-3xl p-8 sm:p-9 shadow-xl relative overflow-hidden space-y-6">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-2xl pointer-events-none" />
+                <div className="flex items-center justify-between border-b border-border pb-5">
+                  <Logo variant="header" size="lg" />
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-amber-500 bg-amber-500/10 px-3 py-1 rounded-full">
+                    {isAr ? "موثوقية مؤسسية" : "Enterprise Grade"}
+                  </span>
+                </div>
+
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  {t.tagline}
+                  {isAr
+                    ? "نلتزم بربط الفرص التجارية بقنوات التوزيع الحقيقية وتطوير الحلول التسويقية والتقنية الداعمة لاستقرار ونمو الأعمال."
+                    : "Committed to connecting commercial opportunities to viable distribution channels and delivering performance marketing and software solutions."}
                 </p>
-                <div className="grid grid-cols-3 gap-4 pt-4 border-t border-border">
-                  <div className="space-y-1">
-                    <div className="text-sm font-bold font-heading text-primary">{t.hero.statsValue1}</div>
-                    <div className="text-[11px] text-muted-foreground">{t.hero.statsTitle1}</div>
+
+                <div className="space-y-3 pt-2 border-t border-border">
+                  <div className="flex items-center gap-3 text-xs text-foreground font-medium">
+                    <ShieldCheck className="w-4 h-4 text-primary shrink-0" />
+                    <span>{isAr ? "إدارة تنفيذية معتمدة ومباشرة" : "Verified direct executive leadership"}</span>
                   </div>
-                  <div className="space-y-1">
-                    <div className="text-sm font-bold font-heading text-primary">{t.hero.statsValue2}</div>
-                    <div className="text-[11px] text-muted-foreground">{t.hero.statsTitle2}</div>
+                  <div className="flex items-center gap-3 text-xs text-foreground font-medium">
+                    <Layers className="w-4 h-4 text-amber-500 shrink-0" />
+                    <span>{isAr ? "منظومة حلول شاملة من التخطيط إلى التنفيذ" : "Integrated solutions from planning to execution"}</span>
                   </div>
-                  <div className="space-y-1">
-                    <div className="text-sm font-bold font-heading text-primary">{t.hero.statsValue3}</div>
-                    <div className="text-[11px] text-muted-foreground">{t.hero.statsTitle3}</div>
+                  <div className="flex items-center gap-3 text-xs text-foreground font-medium">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                    <span>{isAr ? "عقود تجارية وحوكمة تشغيلية واضحة" : "Transparent commercial governance & agreements"}</span>
                   </div>
+                </div>
+
+                <div className="pt-2">
+                  <a
+                    href={`https://wa.me/${contactData.whatsapp.number}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="w-full h-11 rounded-2xl bg-[#25D366]/10 hover:bg-[#25D366]/20 text-[#25D366] font-bold text-xs flex items-center justify-center gap-2 transition"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    <span>{isAr ? "محادثة فورية مع الإدارة: +967 783 334 002" : "Direct WhatsApp: +967 783 334 002"}</span>
+                  </a>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* About Summary Section */}
-        <section id="about" className="py-24 bg-card border-y border-border">
-          <div className="content-wrap grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
-              <span className="eyebrow">{t.about.eyebrow}</span>
-              <h2 className="text-3xl sm:text-4xl font-bold leading-tight">{t.about.title}</h2>
-              <p className="text-muted-foreground leading-relaxed">{t.about.p1}</p>
-              <p className="text-muted-foreground leading-relaxed">{t.about.p2}</p>
-              <div className="pt-2">
-                <Link href="/about" className="route-button route-button-outline px-6 py-3 text-xs inline-flex items-center gap-2">
-                  <span>{ar ? "تعرف علينا أكثر" : "Learn More About Us"}</span>
-                  <ArrowRight className={`w-4 h-4 ${ar ? "rotate-180" : ""}`} />
-                </Link>
-              </div>
+        {/* 2. Choose Your Path: 3-Lane Intent Selector (Decision Hub) */}
+        <section className="py-16 bg-background border-b border-border">
+          <div className="content-wrap space-y-8">
+            <div className="text-center max-w-xl mx-auto space-y-2">
+              <span className="text-xs font-bold font-mono tracking-widest text-primary uppercase">
+                {isAr ? "مسارات الوصول السريع" : "Decision Hub"}
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-bold font-heading">
+                {isAr ? "حدد وجهتك بدقة" : "Choose Your Path"}
+              </h2>
+              <p className="text-xs sm:text-sm text-muted-foreground">
+                {isAr
+                  ? "اختر المسار الذي يلائم احتياجك للوصول المباشر للمعلومة أو الخدمة المطلوبة."
+                  : "Select the route that matches your current goal for frictionless navigation."}
+              </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {t.about.values.map((val, idx) => (
-                <div key={idx} className="bg-background border border-border rounded-3xl p-6 shadow-xs space-y-3">
-                  <ShieldCheck className="w-8 h-8 text-primary" />
-                  <h3 className="font-heading font-bold text-lg">{val.title}</h3>
-                  <p className="text-xs text-muted-foreground leading-relaxed">{val.desc}</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Lane A: Services */}
+              <Link
+                href="/services"
+                className="group bg-card border border-border rounded-3xl p-7 hover:border-primary/50 transition flex flex-col justify-between space-y-6 shadow-xs hover:shadow-md"
+              >
+                <div className="space-y-4">
+                  <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-white transition">
+                    <Briefcase className="w-6 h-6" />
+                  </div>
+                  <h3 className="font-heading font-bold text-lg text-foreground">
+                    {isAr ? "الخدمات التجارية والتسويقية" : "Commercial & Marketing Services"}
+                  </h3>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    {isAr
+                      ? "أبحث عن وكالة تجارية، تيسير توريدات، إدارة حملات إعلانية، أو استشارات اقتصادية."
+                      : "Looking for commercial representation, supply sourcing, paid campaigns, or economic advisory."}
+                  </p>
                 </div>
-              ))}
+                <div className="pt-4 border-t border-border flex items-center justify-between text-xs font-bold text-primary">
+                  <span>{isAr ? "استعراض الخدمات" : "Explore Services"}</span>
+                  <ArrowRight className={`w-4 h-4 group-hover:translate-x-1 transition ${isAr ? "rotate-180 group-hover:-translate-x-1" : ""}`} />
+                </div>
+              </Link>
+
+              {/* Lane B: Products */}
+              <Link
+                href="/products"
+                className="group bg-card border border-border rounded-3xl p-7 hover:border-amber-500/50 transition flex flex-col justify-between space-y-6 shadow-xs hover:shadow-md"
+              >
+                <div className="space-y-4">
+                  <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center group-hover:bg-amber-500 group-hover:text-white transition">
+                    <Code className="w-6 h-6" />
+                  </div>
+                  <h3 className="font-heading font-bold text-lg text-foreground">
+                    {isAr ? "المنتجات والمنصات الرقمية" : "Products & Digital Platforms"}
+                  </h3>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    {isAr
+                      ? "أريد التعرف على منصة معين للقطاع غير الربحي، شبكة غزارة، أو أدوات إدارة الشبكات."
+                      : "Interested in Ma'een NGO SaaS platform, Ghazara network, or telecom utilities."}
+                  </p>
+                </div>
+                <div className="pt-4 border-t border-border flex items-center justify-between text-xs font-bold text-amber-500">
+                  <span>{isAr ? "استكشاف المنتجات" : "Explore Products"}</span>
+                  <ArrowRight className={`w-4 h-4 group-hover:translate-x-1 transition ${isAr ? "rotate-180 group-hover:-translate-x-1" : ""}`} />
+                </div>
+              </Link>
+
+              {/* Lane C: Corporate & Direct Contact */}
+              <Link
+                href="/contact"
+                className="group bg-card border border-border rounded-3xl p-7 hover:border-emerald-500/50 transition flex flex-col justify-between space-y-6 shadow-xs hover:shadow-md"
+              >
+                <div className="space-y-4">
+                  <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center group-hover:bg-emerald-500 group-hover:text-white transition">
+                    <Compass className="w-6 h-6" />
+                  </div>
+                  <h3 className="font-heading font-bold text-lg text-foreground">
+                    {isAr ? "التواصل والشراكات المؤسسية" : "Corporate Inquiries & Contact"}
+                  </h3>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    {isAr
+                      ? "أرغب في لقاء مع الإدارة التنفيذية، استفسار عن شراكة استراتيجية، أو زيارة مقرنا."
+                      : "Seeking an executive meeting, strategic partnership inquiry, or office visitation."}
+                  </p>
+                </div>
+                <div className="pt-4 border-t border-border flex items-center justify-between text-xs font-bold text-emerald-600">
+                  <span>{isAr ? "تواصل مع الإدارة" : "Contact Management"}</span>
+                  <ArrowRight className={`w-4 h-4 group-hover:translate-x-1 transition ${isAr ? "rotate-180 group-hover:-translate-x-1" : ""}`} />
+                </div>
+              </Link>
             </div>
           </div>
         </section>
 
-        {/* Core Services Section */}
-        <section id="services" className="py-24 bg-background">
+        {/* 3. What We Bring: Trust Without Numbers (Real Operational Capabilities) */}
+        <section className="py-24 bg-card border-b border-border">
           <div className="content-wrap space-y-16">
             <div className="text-center max-w-2xl mx-auto space-y-4">
-              <span className="eyebrow">{t.services.eyebrow}</span>
-              <h2 className="text-3xl sm:text-4xl font-bold">{t.services.title}</h2>
-              <p className="text-muted-foreground">{t.services.subtitle}</p>
+              <span className="eyebrow">{isAr ? "ركائز القيمة والاعتماد" : "Institutional Capability"}</span>
+              <h2 className="text-3xl sm:text-4xl font-bold font-heading">
+                {isAr ? "ما نقدمه لشركائنا المؤسسيين" : "What We Bring to Our Partners"}
+              </h2>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {isAr
+                  ? "لا نعتمد على أرقام تسويقية غير موثقة، بل نرتكز على قدرات تشغيلية ومنهجيات عمل مثبتة تحقق نتائج واقعية."
+                  : "We do not rely on unverified claims. We build on disciplined operational capabilities and structured methodologies that deliver verifiable impact."}
+              </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {t.services.list.map((svc) => (
-                <div key={svc.id} className="bg-card border border-border rounded-3xl p-6 shadow-xs flex flex-col justify-between space-y-6">
-                  <div className="space-y-4">
-                    <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center font-bold">
-                      {svc.id === "marketing" && <TrendingUp className="w-6 h-6" />}
-                      {svc.id === "trade" && <Briefcase className="w-6 h-6" />}
-                      {svc.id === "digital" && <Code className="w-6 h-6" />}
-                      {svc.id === "consulting" && <LineChart className="w-6 h-6" />}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="bg-background border border-border rounded-3xl p-6 shadow-xs space-y-4">
+                <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
+                  <Search className="w-6 h-6" />
+                </div>
+                <h3 className="font-heading font-bold text-base text-foreground">
+                  {isAr ? "1. دقة تشخيص الاحتياج" : "1. Precise Need Diagnosis"}
+                </h3>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  {isAr
+                    ? "دراسة عميقة للواقع التجاري وظروف السوق وتحديد متطلبات التوريد أو التسويق بدقة قبل البدء."
+                    : "Deep analysis of market dynamics, operational bottlenecks, and commercial feasibility before execution."}
+                </p>
+              </div>
+
+              <div className="bg-background border border-border rounded-3xl p-6 shadow-xs space-y-4">
+                <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-600 flex items-center justify-center">
+                  <LineChart className="w-6 h-6" />
+                </div>
+                <h3 className="font-heading font-bold text-base text-foreground">
+                  {isAr ? "2. صياغة الحلول التنافسية" : "2. Strategic Formulation"}
+                </h3>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  {isAr
+                    ? "بناء خطة تجارية أو تسويقية متوازنة تجمع بين الجدوى الاقتصادية وسرعة النفاذ للسوق المستهدف."
+                    : "Structuring commercially balanced roadmaps uniting economic feasibility with competitive go-to-market speed."}
+                </p>
+              </div>
+
+              <div className="bg-background border border-border rounded-3xl p-6 shadow-xs space-y-4">
+                <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center">
+                  <ShieldCheck className="w-6 h-6" />
+                </div>
+                <h3 className="font-heading font-bold text-base text-foreground">
+                  {isAr ? "3. التنفيذ والتوريد الموثوق" : "3. Execution & Sourcing"}
+                </h3>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  {isAr
+                    ? "تيسير سلاسل الإمداد وإدارة العقود والحملات بدقة عالية لضمان استمرارية الأعمال وثبات الأداء."
+                    : "Facilitating supply chains, contract execution, and campaigns to ensure stability and seamless flow."}
+                </p>
+              </div>
+
+              <div className="bg-background border border-border rounded-3xl p-6 shadow-xs space-y-4">
+                <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 text-indigo-600 flex items-center justify-center">
+                  <CheckCircle2 className="w-6 h-6" />
+                </div>
+                <h3 className="font-heading font-bold text-base text-foreground">
+                  {isAr ? "4. الحوكمة والدعم المستمر" : "4. Governance & Support"}
+                </h3>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  {isAr
+                    ? "تقارير شفافية ومتابعة دورية مع التزام تام بالحفاظ على حقوق الشركاء والمحافظة على جودة المخرجات."
+                    : "Periodic reporting, operational transparency, and ongoing technical support for sustainable growth."}
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 4. Productized Core Services Matrix */}
+        <section id="services" className="py-24 bg-background border-b border-border">
+          <div className="content-wrap space-y-16">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+              <div className="space-y-4 max-w-2xl">
+                <span className="eyebrow">{isAr ? "مصفوفة الخدمات" : "Services Matrix"}</span>
+                <h2 className="text-3xl sm:text-4xl font-bold font-heading">
+                  {isAr ? "خدمات متخصصة مصممة للنتائج" : "Specialized Services Engineered for Results"}
+                </h2>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {isAr
+                    ? "كل خدمة تجيب عن تحدٍ واضح في السوق وتقدم قيمة تجارية مباشرة قابلة للقياس والتحقق."
+                    : "Each service addresses a distinct commercial challenge and delivers measurable value."}
+                </p>
+              </div>
+              <Link
+                href="/services"
+                className="route-button route-button-outline px-6 py-3 text-xs shrink-0 self-start md:self-end flex items-center gap-2"
+              >
+                <span>{isAr ? "استعراض كافة التفاصيل" : "View Full Matrix"}</span>
+                <ArrowRight className={`w-4 h-4 ${isAr ? "rotate-180" : ""}`} />
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {servicesData.map((svc) => (
+                <div
+                  key={svc.id}
+                  className="bg-card border border-border rounded-3xl p-8 shadow-xs flex flex-col justify-between space-y-6 hover:border-primary/40 transition"
+                >
+                  <div className="space-y-5">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0 font-bold">
+                        {getServiceIcon(svc.icon)}
+                      </div>
+                      <span className="text-xs font-mono font-bold text-muted-foreground bg-background px-3 py-1 rounded-full border border-border">
+                        {svc.number}
+                      </span>
                     </div>
-                    <h3 className="font-heading font-bold text-lg">{svc.title}</h3>
-                    <p className="text-xs text-muted-foreground leading-relaxed">{svc.desc}</p>
+
+                    <div className="space-y-2">
+                      <h3 className="font-heading font-bold text-xl text-foreground">
+                        {svc.title[lang]}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                        {svc.shortDesc[lang]}
+                      </p>
+                    </div>
+
+                    <div className="space-y-3 pt-2">
+                      <div className="p-3.5 rounded-2xl bg-background/60 border border-border/60 space-y-1">
+                        <span className="text-[11px] font-bold text-foreground block">
+                          {isAr ? "التحدي الذي نعالجه:" : "Problem Solved:"}
+                        </span>
+                        <p className="text-xs text-muted-foreground leading-relaxed">
+                          {svc.problemSolved[lang]}
+                        </p>
+                      </div>
+
+                      <div className="p-3.5 rounded-2xl bg-primary/5 border border-primary/15 space-y-1">
+                        <span className="text-[11px] font-bold text-primary block">
+                          {isAr ? "القيمة المحققة لعملك:" : "Value Delivered:"}
+                        </span>
+                        <p className="text-xs text-muted-foreground leading-relaxed">
+                          {svc.valueDelivered[lang]}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <div className="pt-4 border-t border-border">
-                    <Link href="/services" className="text-xs font-semibold text-primary hover:underline">
-                      {ar ? "استعراض الخدمة ←" : "Explore Service →"}
+
+                  <div className="pt-4 border-t border-border flex items-center justify-between gap-4">
+                    <Link
+                      href={`/request-quote?service=${svc.id}`}
+                      className="text-xs font-bold text-primary hover:underline flex items-center gap-1.5"
+                    >
+                      <span>{isAr ? "اطلب تسعير هذه الخدمة" : "Request RFQ for this Service"}</span>
+                      <ArrowRight className={`w-3.5 h-3.5 ${isAr ? "rotate-180" : ""}`} />
+                    </Link>
+                    <Link
+                      href="/services"
+                      className="text-xs text-muted-foreground hover:text-foreground transition"
+                    >
+                      {isAr ? "تفاصيل إضافية" : "More details"}
                     </Link>
                   </div>
                 </div>
@@ -132,111 +411,261 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Products Showcase Section */}
-        <section id="products" className="py-24 bg-card border-y border-border">
+        {/* 5. Verified Products & Digital Platforms */}
+        <section id="products" className="py-24 bg-card border-b border-border">
           <div className="content-wrap space-y-16">
             <div className="text-center max-w-2xl mx-auto space-y-4">
-              <span className="eyebrow">{ar ? "المنتجات والمنصات" : "Products & Platforms"}</span>
-              <h2 className="text-3xl sm:text-4xl font-bold">{ar ? "منصات وحلول رقمية مبتكرة" : "Innovative Digital Platforms & Solutions"}</h2>
-              <p className="text-muted-foreground">{ar ? "نخبة من المنصات التجارية والخيرية التي طورتها ودعمتها غزارة." : "Curated commercial and non-profit platforms developed and supported by Ghazara."}</p>
+              <span className="eyebrow">{isAr ? "المنتجات والمنصات" : "Products & Platforms"}</span>
+              <h2 className="text-3xl sm:text-4xl font-bold font-heading">
+                {isAr ? "منصات وحلول برمجية معتمدة" : "Verified Digital Platforms & SaaS"}
+              </h2>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {isAr
+                  ? "حلول رقمية سحابية وبنى تحتية طورتها ودعمتها غزارة لخدمة المؤسسات والشركات."
+                  : "Cloud SaaS solutions and network utilities engineered and supported by Ghazara."}
+              </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="bg-background border border-border rounded-3xl p-8 shadow-xs flex flex-col justify-between space-y-6">
-                <div className="space-y-4">
-                  <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">SaaS Enterprise</span>
-                  <h3 className="font-heading font-bold text-xl">{ar ? "منصة معين الرقمية (Ma'een)" : "Ma'een Digital Platform"}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{ar ? "منصة ساس متكاملة لخدمة الجمعيات الخيرية والمؤسسات غير الربحية في المملكة العربية السعودية." : "An integrated SaaS platform for charities and non-profit organizations in Saudi Arabia."}</p>
+              {productsData.map((prod) => (
+                <div
+                  key={prod.id}
+                  className="bg-background border border-border rounded-3xl p-8 shadow-xs flex flex-col justify-between space-y-6 hover:border-primary/40 transition"
+                >
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-semibold px-3 py-1 rounded-full bg-primary/10 text-primary">
+                        {prod.tag[lang]}
+                      </span>
+                      <span className="text-[11px] font-mono uppercase font-bold text-emerald-600 bg-emerald-500/10 px-2.5 py-0.5 rounded-md">
+                        {prod.status === "live"
+                          ? isAr
+                            ? "متاح وجاهز"
+                            : "Live Platform"
+                          : isAr
+                          ? "حل مؤسسي"
+                          : "Enterprise Solution"}
+                      </span>
+                    </div>
+
+                    <h3 className="font-heading font-bold text-xl text-foreground">
+                      {prod.title[lang]}
+                    </h3>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      {prod.shortDesc[lang]}
+                    </p>
+
+                    <div className="space-y-2 pt-2 border-t border-border/70">
+                      {prod.keyFeatures.map((feat, fIdx) => (
+                        <div key={fIdx} className="flex items-center gap-2 text-xs text-muted-foreground">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-primary shrink-0" />
+                          <span>{feat[lang]}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="pt-4 border-t border-border flex items-center justify-between">
+                    <Link
+                      href={`/request-quote?product=${prod.id}`}
+                      className="text-xs font-bold text-primary hover:underline flex items-center gap-1"
+                    >
+                      <span>{isAr ? "طلب المنصة / استفسار" : "Inquire / Request Access"}</span>
+                      <ArrowRight className={`w-3.5 h-3.5 ${isAr ? "rotate-180" : ""}`} />
+                    </Link>
+
+                    {prod.externalLink && (
+                      <a
+                        href={prod.externalLink}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1"
+                      >
+                        <span>{isAr ? "المستودع" : "Repo"}</span>
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </a>
+                    )}
+                  </div>
                 </div>
-                <div className="pt-4 border-t border-border">
-                  <a href="https://github.com/Tomybarq/moeen-ngo" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:underline">
-                    <span>{ar ? "عرض المشروع على جيت هب" : "View on GitHub"}</span>
-                    <ExternalLink className="w-4 h-4" />
-                  </a>
-                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 6. How We Work: 4-Stage Transparent Methodology */}
+        <section className="py-24 bg-background border-b border-border">
+          <div className="content-wrap space-y-16">
+            <div className="text-center max-w-2xl mx-auto space-y-4">
+              <span className="eyebrow">{isAr ? "منهجية العمل" : "Our Methodology"}</span>
+              <h2 className="text-3xl sm:text-4xl font-bold font-heading">
+                {isAr ? "مسار واضح من الطلب إلى الإنجاز" : "A Clear Route from Scoping to Delivery"}
+              </h2>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {isAr
+                  ? "خطوات تنفيذ منضبطة وشفافة تضمن عدم ضياع الوقت وتحدد المسؤوليات بدقة في كل مرحلة."
+                  : "Disciplined execution stages ensuring clarity, milestone tracking, and optimal commercial outcomes."}
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="p-6 rounded-3xl bg-card border border-border space-y-4 relative">
+                <span className="text-3xl font-mono font-bold text-primary/20 block">01</span>
+                <h3 className="font-heading font-bold text-base text-foreground">
+                  {isAr ? "الاستكشاف والتشخيص" : "1. Discovery & Scoping"}
+                </h3>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  {isAr
+                    ? "استقبال متطلباتك عبر النموذج الموحد، وتحديد النطاق الجغرافي وحجم العمل والخدمة المناسبة."
+                    : "Receiving your RFQ, diagnosing the commercial scope, and defining technical requirements."}
+                </p>
               </div>
 
-              <div className="bg-background border border-border rounded-3xl p-8 shadow-xs flex flex-col justify-between space-y-6">
-                <div className="space-y-4">
-                  <span className="inline-block px-3 py-1 rounded-full bg-amber-500/10 text-amber-600 text-xs font-semibold">Core Portal</span>
-                  <h3 className="font-heading font-bold text-xl">{ar ? "شبكة غزارة الرقمية (ghazara.net)" : "Ghazara Digital Network"}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{ar ? "البوابة المركزية لخدماتنا ومشاريعنا التقنية والتسويقية للعملاء في المنطقة والعالم." : "The central gateway for our technical and marketing services for regional and global clients."}</p>
-                </div>
-                <div className="pt-4 border-t border-border">
-                  <Link href="/products" className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:underline">
-                    <span>{ar ? "استكشاف المنتجات" : "Explore Products"}</span>
-                    <ArrowRight className={`w-4 h-4 ${ar ? "rotate-180" : ""}`} />
-                  </Link>
-                </div>
+              <div className="p-6 rounded-3xl bg-card border border-border space-y-4 relative">
+                <span className="text-3xl font-mono font-bold text-amber-500/20 block">02</span>
+                <h3 className="font-heading font-bold text-base text-foreground">
+                  {isAr ? "دراسة الجدوى والتسعير" : "2. Feasibility & Proposal"}
+                </h3>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  {isAr
+                    ? "إعداد دراسة موجزة وعرض أسعار واضح يحدد المخرجات المتوقعة والجدول الزمني للتنفيذ."
+                    : "Preparing a tailored feasibility brief and transparent commercial proposal with timelines."}
+                </p>
               </div>
 
-              <div className="bg-background border border-border rounded-3xl p-8 shadow-xs flex flex-col justify-between space-y-6">
-                <div className="space-y-4">
-                  <span className="inline-block px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 text-xs font-semibold">Enterprise Utilities</span>
-                  <h3 className="font-heading font-bold text-xl">{ar ? "أنظمة إدارة الشبكات وميكروتيك" : "Network & MikroTik Systems"}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{ar ? "أدوات متخصصة لمراقبة وتأمين شبكات الاتصالات وتوزيع النطاق الترددي بكفاءة عالية." : "Specialized tools for monitoring and securing telecom networks and bandwidth distribution."}</p>
-                </div>
-                <div className="pt-4 border-t border-border">
-                  <Link href="/products" className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:underline">
-                    <span>{ar ? "معرفة المزيد" : "Learn More"}</span>
-                    <ArrowRight className={`w-4 h-4 ${ar ? "rotate-180" : ""}`} />
-                  </Link>
-                </div>
+              <div className="p-6 rounded-3xl bg-card border border-border space-y-4 relative">
+                <span className="text-3xl font-mono font-bold text-emerald-500/20 block">03</span>
+                <h3 className="font-heading font-bold text-base text-foreground">
+                  {isAr ? "التنفيذ والتوريد" : "3. Execution & Sourcing"}
+                </h3>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  {isAr
+                    ? "بدء العمليات التشغيلية، إدارة التوريدات والحملات، أو بناء المنصة الرقمية وفق المواصفات."
+                    : "Initiating operations, supply workflows, campaign launches, or platform engineering."}
+                </p>
+              </div>
+
+              <div className="p-6 rounded-3xl bg-card border border-border space-y-4 relative">
+                <span className="text-3xl font-mono font-bold text-indigo-500/20 block">04</span>
+                <h3 className="font-heading font-bold text-base text-foreground">
+                  {isAr ? "المتابعة والتقييم" : "4. Review & Governance"}
+                </h3>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  {isAr
+                    ? "تسليم المخرجات، مراجعة مؤشرات الأداء، وتوفير الدعم المستمر لضمان استدامة النجاح."
+                    : "Delivering milestones, reviewing KPIs, and providing ongoing support for growth."}
+                </p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Trust & Proof / Partners Section */}
-        <section className="py-24 bg-background">
+        {/* 7. Sectors Served: Verifiable B2B Capabilities */}
+        <section className="py-24 bg-card border-b border-border">
           <div className="content-wrap space-y-12">
             <div className="text-center max-w-2xl mx-auto space-y-4">
-              <span className="eyebrow">{ar ? "الثقة والاعتماد" : "Trust & Credibility"}</span>
-              <h2 className="text-3xl sm:text-4xl font-bold">{ar ? "شركاء النجاح والقطاعات المخدومة" : "Success Partners & Sectors Served"}</h2>
-              <p className="text-muted-foreground">{ar ? "نعتز بشراكاتنا مع المؤسسات الرائدة في التجارة والتقنية والعمل غير الربحي." : "Proud to partner with leading enterprises in commerce, tech, and non-profits."}</p>
+              <span className="eyebrow">{isAr ? "القطاعات والجاهزية" : "Target Sectors"}</span>
+              <h2 className="text-3xl sm:text-4xl font-bold font-heading">
+                {isAr ? "قطاعات الأعمال المخدومة" : "Commercial Sectors Served"}
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                {isAr
+                  ? "خبرات متراكمة في خدمة مختلف القطاعات التجارية والخدمية وغير الربحية."
+                  : "Dedicated solutions designed to meet the demands of diverse business ecosystems."}
+              </p>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-              <div className="bg-card border border-border rounded-3xl p-6 shadow-xs">
-                <div className="font-heading font-bold text-lg mb-1">{ar ? "التجارة والتجزئة" : "Retail & Commerce"}</div>
-                <p className="text-xs text-muted-foreground">{ar ? "توريدات وسلاسل إمداد" : "Procurement & Supply"}</p>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="bg-background border border-border rounded-3xl p-6 shadow-xs text-center space-y-2">
+                <div className="font-heading font-bold text-base text-foreground">
+                  {isAr ? "التجارة والتجزئة (FMCG)" : "Retail & Consumer Goods"}
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  {isAr ? "وكالات تجارية وتوريدات وسلاسل إمداد" : "Agencies, procurement & distribution"}
+                </p>
               </div>
-              <div className="bg-card border border-border rounded-3xl p-6 shadow-xs">
-                <div className="font-heading font-bold text-lg mb-1">{ar ? "القطاع غير الربحي" : "Non-Profit Sector"}</div>
-                <p className="text-xs text-muted-foreground">{ar ? "منصات ساس للجمعيات" : "SaaS for NGOs"}</p>
+
+              <div className="bg-background border border-border rounded-3xl p-6 shadow-xs text-center space-y-2">
+                <div className="font-heading font-bold text-base text-foreground">
+                  {isAr ? "القطاع غير الربحي والخيري" : "Non-Profit & NGOs"}
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  {isAr ? "منصات ساس وحلول حوكمة التبرعات" : "SaaS platforms & donor governance"}
+                </p>
               </div>
-              <div className="bg-card border border-border rounded-3xl p-6 shadow-xs">
-                <div className="font-heading font-bold text-lg mb-1">{ar ? "التقنية والشبكات" : "Tech & Networks"}</div>
-                <p className="text-xs text-muted-foreground">{ar ? "حلول ميكروتيك المتقدمة" : "Advanced MikroTik"}</p>
+
+              <div className="bg-background border border-border rounded-3xl p-6 shadow-xs text-center space-y-2">
+                <div className="font-heading font-bold text-base text-foreground">
+                  {isAr ? "الاتصالات وتقنية المعلومات" : "Telecom & IT Infrastructure"}
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  {isAr ? "حلول ميكروتيك وإدارة الشبكات" : "MikroTik utilities & traffic telemetry"}
+                </p>
               </div>
-              <div className="bg-card border border-border rounded-3xl p-6 shadow-xs">
-                <div className="font-heading font-bold text-lg mb-1">{ar ? "ريادة الأعمال" : "Enterprises & Startups"}</div>
-                <p className="text-xs text-muted-foreground">{ar ? "استراتيجيات التسويق والنمو" : "Marketing & Growth"}</p>
+
+              <div className="bg-background border border-border rounded-3xl p-6 shadow-xs text-center space-y-2">
+                <div className="font-heading font-bold text-base text-foreground">
+                  {isAr ? "الشركات والخدمات B2B" : "Enterprise & B2B Services"}
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  {isAr ? "استراتيجيات التسويق والأداء والنمو" : "Performance marketing & expansion plans"}
+                </p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* RFQ & Contact Section */}
-        <section id="rfq" className="py-24 bg-card border-t border-border">
-          <div className="content-wrap max-w-4xl mx-auto space-y-12">
-            <div className="text-center space-y-4">
-              <span className="eyebrow">{t.rfq.eyebrow}</span>
-              <h2 className="text-3xl sm:text-5xl font-bold">{t.rfq.title}</h2>
-              <p className="text-muted-foreground max-w-xl mx-auto">{t.rfq.subtitle}</p>
+        {/* 8. Final Conversion Action: Dual Action Closing Block */}
+        <section id="rfq" className="py-24 bg-background">
+          <div className="content-wrap max-w-4xl mx-auto space-y-10 text-center">
+            <div className="space-y-4">
+              <span className="eyebrow">{isAr ? "ابدأ مسارك الآن" : "Take Action"}</span>
+              <h2 className="text-3xl sm:text-5xl font-bold font-heading">
+                {isAr
+                  ? "جاهز لبدء التعاون أو طلب استشارة؟"
+                  : "Ready to Initiate Collaboration or Request a Quote?"}
+              </h2>
+              <p className="text-sm sm:text-base text-muted-foreground max-w-xl mx-auto leading-relaxed">
+                {isAr
+                  ? "تواصل مع فريق مؤسسة غزارة اليوم للحصول على تسعير دقيق، دراسة أولية لاحتياجك، أو لقاء عمل مؤسسي."
+                  : "Contact Ghazara team today for an accurate quote, initial assessment, or direct executive discussion."}
+              </p>
             </div>
 
-            <div className="bg-background border border-border rounded-3xl p-8 sm:p-12 shadow-md">
-              <Link href="/contact" className="route-button route-button-primary w-full h-14 text-sm font-bold flex items-center justify-center gap-2">
-                <span>{ar ? "الانتقال إلى نموذج طلب الخدمة الكامل" : "Proceed to Full RFQ Form"}</span>
-                <ArrowRight className={`w-4 h-4 ${ar ? "rotate-180" : ""}`} />
-              </Link>
+            <div className="bg-card border border-border rounded-3xl p-8 sm:p-12 shadow-lg space-y-6">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <Link
+                  href="/request-quote"
+                  className="route-button route-button-primary w-full sm:w-auto px-8 h-14 text-sm font-bold flex items-center justify-center gap-2 shadow-md"
+                >
+                  <span>{isAr ? "نموذج طلب عرض السعر الموحد" : "Launch Unified RFQ Form"}</span>
+                  <ArrowRight className={`w-4 h-4 ${isAr ? "rotate-180" : ""}`} />
+                </Link>
+
+                <Link
+                  href="/contact"
+                  className="route-button route-button-outline w-full sm:w-auto px-8 h-14 text-sm font-bold flex items-center justify-center gap-2"
+                >
+                  <span>{isAr ? "صفحة التواصل والاستفسارات" : "General Contact & Office Info"}</span>
+                </Link>
+              </div>
+
+              <div className="pt-4 border-t border-border flex flex-col sm:flex-row items-center justify-center gap-6 text-xs text-muted-foreground">
+                <span>
+                  {isAr ? "البريد الإلكتروني المعتمد:" : "Official Email:"}{" "}
+                  <strong className="text-foreground">{contactData.email.address}</strong>
+                </span>
+                <span>•</span>
+                <span>
+                  {isAr ? "هاتف الإدارة:" : "Executive Phone:"}{" "}
+                  <strong className="text-foreground">{contactData.phone.display}</strong>
+                </span>
+              </div>
             </div>
           </div>
         </section>
       </main>
 
-      <Footer lang={lang} />
+      <Footer />
     </div>
   );
 }

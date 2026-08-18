@@ -167,6 +167,24 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    chunkSizeWarningLimit: 600,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes("node_modules")) {
+            if (id.includes("react-dom") || id.includes("wouter") || id.includes("react/")) {
+              return "vendor-react";
+            }
+            if (id.includes("@tanstack") || id.includes("@trpc")) {
+              return "vendor-query";
+            }
+            if (id.includes("lucide-react") || id.includes("sonner")) {
+              return "vendor-ui";
+            }
+          }
+        },
+      },
+    },
   },
   server: {
     host: true,

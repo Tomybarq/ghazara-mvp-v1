@@ -1,19 +1,23 @@
 import BioHubModal from "@/components/hub/BioHubModal";
-import RFQModal from "@/components/quote/RFQModal";
-import type { Language, SectorId, ServiceId } from "@/types";
 import { Globe2 } from "lucide-react";
-import { useState } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
+import SEOHead from "@/components/seo/SEOHead";
 
 export default function Hub() {
-  const query = new URLSearchParams(window.location.search);
-  const sector = query.get("sector") as SectorId | null;
-  const service = query.get("service") as ServiceId | null;
-  const [language, setLanguage] = useState<Language>("ar");
-  const [rfqOpen, setRfqOpen] = useState(() => query.get("request") === "1");
+  const { lang, toggleLanguage, isAr } = useLanguage();
 
-  return <>
-    <button type="button" onClick={() => setLanguage((current) => current === "ar" ? "en" : "ar")} className="fixed left-5 top-5 z-20 inline-flex h-10 items-center gap-2 rounded-full border border-white/20 bg-[#242424]/85 px-3 text-xs font-bold text-white backdrop-blur hover:bg-white/10"><Globe2 size={15} />{language === "ar" ? "English" : "العربية"}</button>
-    <BioHubModal open language={language} mode="page" onRequest={() => setRfqOpen(true)} />
-    <RFQModal open={rfqOpen} language={language} initialSectorId={sector} initialServiceId={service} onClose={() => setRfqOpen(false)} />
-  </>;
+  return (
+    <>
+      <SEOHead pageKey="home" />
+      <button
+        type="button"
+        onClick={toggleLanguage}
+        className="fixed left-5 top-5 z-20 inline-flex h-10 items-center gap-2 rounded-full border border-white/20 bg-[#242424]/85 px-3.5 text-xs font-heading font-bold text-white backdrop-blur hover:bg-white/10 cursor-pointer shadow-lg"
+      >
+        <Globe2 size={15} className="text-amber-400" />
+        <span>{isAr ? "English" : "العربية"}</span>
+      </button>
+      <BioHubModal open language={lang} mode="page" />
+    </>
+  );
 }

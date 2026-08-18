@@ -1,0 +1,18 @@
+# Ghazara Trading & Marketing — robots.txt
+# https://ghazara.net
+
+User-agent: *
+Allow: /
+Allow: /about
+Allow: /services
+Allow: /products
+Allow: /projects
+Allow: /blog
+Allow: /contact
+Allow: /request-quote
+
+# Internal utility / auth routes
+Disallow: /api/
+Disallow: /hub
+
+Sitemap: https://ghazara.net/sitemap.xml

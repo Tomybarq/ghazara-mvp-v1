@@ -1,3 +1,5 @@
+import { contactData } from "@/data/contact";
+
 export type Language = "ar" | "en";
 
 export type LocalizedText = {
@@ -41,7 +43,8 @@ export interface RFQDraft {
   notes: string;
 }
 
-export const WA_PHONE = "967779030679";
+// Single Source of Truth from contactData
+export const WA_PHONE = contactData.whatsapp.number;
 
 export const SECTORS: readonly Sector[] = [
   {

@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" fill="none" width="1200" height="630">
+  <defs>
+    <linearGradient id="og-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1A1522" />
+      <stop offset="60%" stop-color="#241B32" />
+      <stop offset="100%" stop-color="#0E0A14" />
+    </linearGradient>
+    <linearGradient id="og-iris" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5E3B95" />
+      <stop offset="100%" stop-color="#8A4E91" />
+    </linearGradient>
+    <linearGradient id="og-amber" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F19844" />
+      <stop offset="100%" stop-color="#E6833E" />
+    </linearGradient>
+    <radialGradient id="og-glow" cx="80%" cy="20%" r="50%">
+      <stop offset="0%" stop-color="rgba(241,152,68,0.22)" />
+      <stop offset="100%" stop-color="transparent" />
+    </radialGradient>
+    <radialGradient id="og-glow-iris" cx="20%" cy="80%" r="60%">
+      <stop offset="0%" stop-color="rgba(94,59,149,0.35)" />
+      <stop offset="100%" stop-color="transparent" />
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#og-bg)" />
+  <rect width="1200" height="630" fill="url(#og-glow)" />
+  <rect width="1200" height="630" fill="url(#og-glow-iris)" />
+
+  <!-- Outer Border Frame -->
+  <rect x="40" y="40" width="1120" height="550" rx="32" stroke="rgba(255,255,255,0.12)" stroke-width="2" />
+
+  <!-- Brand Emblem -->
+  <g transform="translate(100, 110)">
+    <rect x="0" y="0" width="120" height="120" rx="30" fill="url(#og-iris)" />
+    <path d="M 0 75 L 75 0 L 120 0 L 120 45 L 45 120 L 0 120 Z" fill="url(#og-amber)" opacity="0.88" />
+    <rect x="4" y="4" width="112" height="112" rx="26" stroke="rgba(255,255,255,0.2)" stroke-width="2" />
+    <text x="60" y="80" font-family="'IBM Plex Sans Arabic', sans-serif" font-size="68" font-weight="800" fill="#FFFFFF" text-anchor="middle" dominant-baseline="middle">غ</text>
+    <circle cx="80" cy="34" r="8" fill="#F19844" stroke="#FFFFFF" stroke-width="2" />
+  </g>
+
+  <!-- Typography Content -->
+  <g transform="translate(100, 290)">
+    <text x="0" y="0" font-family="'IBM Plex Sans Arabic', sans-serif" font-size="22" font-weight="700" letter-spacing="0.12em" fill="#F19844">مؤسسة غزارة للتجارة والتسويق</text>
+    <text x="0" y="70" font-family="'IBM Plex Sans Arabic', sans-serif" font-size="52" font-weight="800" fill="#FFFFFF">حلول تجارية وتسويقية متكاملة</text>
+    <text x="0" y="140" font-family="'IBM Plex Sans Arabic', sans-serif" font-size="52" font-weight="800" fill="#E6833E">تربط الأعمال بالفرص الإقليمية</text>
+    <text x="0" y="210" font-family="'IBM Plex Sans', sans-serif" font-size="22" font-weight="600" fill="rgba(255,255,255,0.65)" letter-spacing="0.08em">GHAZARA TRADING &amp; MARKETING — ghazara.net</text>
+  </g>
+
+  <!-- Commercial Growth Tag -->
+  <g transform="translate(860, 110)">
+    <rect x="0" y="0" width="240" height="48" rx="24" fill="rgba(241,152,68,0.15)" stroke="rgba(241,152,68,0.4)" />
+    <text x="120" y="30" font-family="'IBM Plex Sans Arabic', sans-serif" font-size="16" font-weight="700" fill="#F19844" text-anchor="middle">منصة أعمال رسمية</text>
+  </g>
+</svg>

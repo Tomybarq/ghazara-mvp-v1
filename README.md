@@ -1,82 +1,79 @@
-# مؤسسة غزارة للتجارة والتسويق | Ghazara Trading & Marketing
+# مؤسسة غزارة للتجارة والتسويق | Ghazara Trading & Marketing (V2)
 
-> **منصة أعمال رقمية متكاملة واحترافية** لتوفير حلول التجارة، التسويق الرقمي، والاستشارات الاستراتيجية بأعلى معايير الجودة والموثوقية.
-
----
-
-## 🇸🇦 نظرة عامة على المشروع (Project Overview)
-
-تعتبر **مؤسسة غزارة للتجارة والتسويق** كياناً تجارياً وخدمياً رابعاً للتميز في تقديم الخدمات التجارية وحلول التسويق الرقمي المتطورة. تم بناء هذه المنصة الرقمية وفق أحدث المعايير الهندسية والتصميمية لتكون واجهة احترافية تعكس قيم المؤسسة في الموثوقية، الاحترافية، والابتكار. تم تصميم الموقع ليدعم اللغة العربية (RTL) واللغة الإنجليزية بالكامل، مع التركيز على تجربة المستخدم (UX/UI)، سرعة الأداء، التوافق مع محركات البحث (SEO)، والتحويل التجاري (CRO).
-
-The **Ghazara Trading & Marketing Platform** is an enterprise-grade digital web application built to showcase the institution's commercial services, digital marketing expertise, and strategic solutions. The platform adheres to rigorous design and engineering standards, featuring a fully responsive Arabic-first (RTL) and English architecture optimized for conversion, SEO, and accessibility.
+> **منظومة رقمية مؤسسية وتجارية متكاملة** لتقديم خدمات وحلول التجارة، التسويق الرقمي، تمثيل الشركات، وتطوير المنصات الرقمية بمعايير هندسية وأمنية احترافية (Production-Ready).
 
 ---
 
-## 🛠 التكنولوجيا والهندسة المعمارية (Tech Stack & Architecture)
+## 🏛 الهوية المؤسسية وبيانات الاتصال المعتمدة (Approved Corporate Identity)
 
-تعتمد المنصة على حزمة برمجية حديثة وقوية (Full-Stack Type-Safe Stack) تضمن الأداء العالي والصيانة المستدامة:
-
-| الطبقة (Layer) | التقنية المستخدمة (Technology) | الوصف والدور (Description & Role) |
+| البيان / Field | التفاصيل بالعربية (Arabic) | Details in English |
 | :--- | :--- | :--- |
-| **الواجهة الأمامية (Frontend)** | React 19, Vite, Tailwind CSS 4 | بناء واجهات مستخدم تفاعلية، متجاوبة، وسريعة مع دعم كامل للغة العربية (RTL). |
-| **الواجهة الخلفية (Backend)** | Node.js, Express 4, tRPC 11 | معالجة الطلبات البرمجية بضمانات أنواع البيانات (Type-Safety) الكاملة من الخادم إلى العميل. |
-| **قواعد البيانات (Database)** | MySQL, Drizzle ORM | إدارة البيانات والعلاقات بأمان وكفاءة عالية مع توليد تلقيقات الترحيل (Migrations). |
-| **المصادقة والأمان (Auth & Security)** | Manus OAuth, JWT | إدارة جلسات المستخدمين وصلاحيات الوصول بشكل آمن وموثوق. |
-| **الاختبار والجودة (Testing & QA)** | Vitest | إجراء اختبارات الوحدة وضمان خلو الأنظمة من الأخطاء البرمجية. |
+| **اسم المنشأة / Organization** | مؤسسة غزارة للتجارة والتسويق | Ghazara Trading & Marketing Establishment |
+| **المدير التنفيذي / Executive Director** | **أ/ عدنان الحنشي** | **Adnan Al-Hanashi** |
+| **الهاتف والواتساب المباشر / Phone & WhatsApp** | `+967 783 334 002` | `+967 783 334 002` |
+| **البريد الإلكتروني الرسمي / Official Email** | `info@ghazara.net` | `info@ghazara.net` |
+| **المقر الرئيسي / Headquarters** | شارع الجزائر - عمارة باطاهر - الدور الثاني - شقة 6 - سيئون - حضرموت - اليمن | Al-Jazair St., Ba-Taher Bldg., 2nd Floor, Apt 6, Seiyun, Hadramout, Yemen |
+| **أوقات العمل الرسمية / Working Hours** | السبت – الخميس: 8:00 صباحاً – 5:00 مساءً (توقيت اليمن GMT+3) | Sat – Thu: 8:00 AM – 5:00 PM (GMT+3) |
 
 ---
 
-## 📂 هيكل المشروع (Directory Structure)
+## 🗺 خريطة المسارات والصفحات (Application Routes & Architecture)
 
-```text
-ghazara-website/
-├── client/                 # واجهة المستخدم الأمامية (React + Tailwind)
-│   ├── src/
-│   │   ├── components/     # المكونات المشتركة ومكونات UI
-│   │   ├── pages/          # صفحات الموقع الرئيسية والفرعية
-│   │   ├── App.tsx         # توجيه المسارات والمزودات
-│   │   └── index.css       # الأنماط العامة وإعدادات التصميم
-│   └── index.html          # ملف HTML الرئيسي
-├── server/                 # الخادم والواجهة الخلفية (Node.js + tRPC)
-│   ├── _core/              # البنية التحتية الأساسية للخادم والمصادقة
-│   ├── db.ts               # مساعدات الاستعلام وقاعدة البيانات
-│   ├── routers.ts          # عقود ومعالجات tRPC
-│   └── index.ts            # نقطة بداية الخادم
-├── drizzle/                # مخطط قاعدة البيانات وملفات الترحيل
-├── shared/                 # الأنواع والثوابت المشتركة بين العميل والخادم
-└── README.md               # توثيق المشروع (هذا الملف)
+| المسار / Route | الصفحة / Page | الغرض والوظيفة / Purpose & Capabilities |
+| :--- | :--- | :--- |
+| `/` | **الرئيسية (Home)** | الواجهة الشاملة: الرؤية، محاور النمو، الخدمات الأساسية، مؤشرات الأداء، وشبكة الوصول. |
+| `/about` | **عن غزارة (About)** | الهيكل المؤسسي، القيادة التنفيذية، رسالة ورؤية المؤسسة، وضمانات الجودة. |
+| `/services` | **الخدمات (Services)** | دليل الخدمات التفصيلي، القيمة المضافة، والمشاكل التي نعالجها مع إمكانية طلب عرض سعر مباشر. |
+| `/products` | **المنتجات (Products)** | كتالوج المنصات والأنظمة السحابية مع فلاتر التصنيفات (SaaS، البوابات، الشبكات) وبحث فوري. |
+| `/projects` | **المشاريع (Projects)** | سجل الإنجازات ودراسات الحالة مع فلاتر القطاعات وروابط المنصات الحية. |
+| `/blog` | **المدونة والرؤى (Blog)** | مقالات تحليلية ورؤى استراتيجية في التجارة والتقنية مع فلاتر المواضيع والبحث الحي. |
+| `/contact` | **اتصل بنا (Contact)** | قنوات التواصل الرسمية، الخريطة التوضيحية، نموذج المراسلة المؤسسي، ورابط WhatsApp المباشر. |
+| `/request-quote` | **طلب عرض سعر (RFQ)** | مسار التحويل المزدوج الذكي: تسجيل الطلب في قاعدة البيانات + تجهيز رسالة WhatsApp فورية للإدارة. |
+| `/hub` | **بوابة الوصول السريع (Bio Hub)** | بطاقة التعريف الرقمية الموحدة للمعارض ووسائل التواصل الاجتماعي. |
+
+---
+
+## 🛠 البنية الهندسية والتقنيات (Engineering & Tech Stack)
+
+- **Frontend:** React 19, TypeScript, Vite 7, Tailwind CSS 4, Wouter Routing.
+- **State & Data Fetching:** TanStack Query, tRPC Client v11, Centralized Bilingual `LanguageProvider`.
+- **Backend:** Node.js, Express 4, tRPC Server v11 (Type-Safe Procedures).
+- **Database & ORM:** MySQL 8 / TiDB, Drizzle ORM.
+- **Performance & Code Splitting:** Dynamic `React.lazy` chunks + Vite `manualChunks` (`vendor-react`, `vendor-query`, `vendor-ui`).
+- **SEO & Schema.org:** Dynamic `<SEOHead />` with JSON-LD graph (`Organization`, `LocalBusiness`, `WebSite`, `WebPage`), `robots.txt`, and `sitemap.xml`.
+- **Accessibility & UX:** WCAG 2.2 AA compliant, full keyboard navigation, `aria-required`, and high-contrast tokens.
+
+---
+
+## 🚀 التشغيل والفحص والاختبار (Commands & Operations)
+
+```bash
+# 1. تثبيت الاعتماديات
+pnpm install
+
+# 2. فحص الأنواع الصارمة في TypeScript
+pnpm check
+
+# 3. تشغيل حزمة الاختبارات الآلية (Vitest)
+pnpm test
+
+# 4. بناء نسخة الإنتاج المجمعة والمحسنة
+pnpm build
+
+# 5. تشغيل بيئة التطوير المحلية
+pnpm dev
 ```
 
 ---
 
-## 🚀 دليل التشغيل والتطوير المحلي (Local Development Guide)
+## 🛡 معايير الأمان وحماية البيانات (Security & Reliability)
 
-للبدء في تشغيل المشروع محلياً، يرجى اتباع الخطوات البرمجية التالية:
-
-1. **تثبيت الحزم المطلوبة:**
-   ```bash
-   pnpm install
-   ```
-
-2. **تشغيل خادم التطوير المحلي:**
-   ```bash
-   pnpm dev
-   ```
-   سيتم تشغيل الخادم المحلي على المنفذ المحدد وإتاحة المعاينة الفورية (Hot Module Replacement).
-
-3. **تشغيل اختبارات الجودة (Vitest):**
-   ```bash
-   pnpm test
-   ```
+1. **التحقق الصارم من المدخلات (Strict Zod Validation):** كافة طلبات الـ RFQ تمر بمخططات تحقق تلزم حدود الأحرف وتجري تنظيف وتقليم الفراغات.
+2. **عدم اختلاق البيانات (Zero Hallucination):** جميع بيانات التواصل والخدمات موثقة ومركزية في ملفات البيانات (`data/contact.ts`, `data/services.ts`, `data/products.ts`).
+3. **التحويل المزدوج المرن (Dual Conversion Resilience):** في حال حدوث أي بطء بالشبكة، يتاح للمستخدم إتمام طلبه فوراً عبر WhatsApp للإدارة دون فقدان البيانات.
 
 ---
 
-## 🌐 النشر والإنتاج (Deployment & Publishing)
+## 📄 حقوق الملكية (License)
 
-تم إعداد المشروع ليدعم النشر التلقائي والمستمر عبر منصة **Manus** مع دعم التوسع التلقائي (Autoscale) وتكامل مستودع **GitHub** (`https://github.com/Tomybarq/ghazara-mvp-v1`). كل عملية حفظ ناجحة لنقاط التفتيش (`Checkpoint`) تؤدي إلى النشر الفوري للنسخة الإنتاجية.
-
----
-
-## 📄 الترخيص (License)
-
-هذا المشروع خاص بـ **مؤسسة غزارة للتجارة والتسويق**. جميع الحقوق محفوظة © 2026.
+جميع الحقوق محفوظة © 2026 **مؤسسة غزارة للتجارة والتسويق**.

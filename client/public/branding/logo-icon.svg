@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none" width="100%" height="100%">
+  <defs>
+    <!-- Deep Iris Gradient -->
+    <linearGradient id="ghz-icon-iris" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3D2070" />
+      <stop offset="50%" stop-color="#5E3B95" />
+      <stop offset="100%" stop-color="#7B439B" />
+    </linearGradient>
+
+    <!-- Honeyed Amber Dynamic Axis -->
+    <linearGradient id="ghz-icon-amber" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFB356" />
+      <stop offset="50%" stop-color="#F19844" />
+      <stop offset="100%" stop-color="#E6833E" />
+    </linearGradient>
+
+    <!-- Soft Inner Glow -->
+    <linearGradient id="ghz-icon-highlight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.0" />
+    </linearGradient>
+
+    <!-- Filter for crisp shadow -->
+    <filter id="ghz-icon-shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#1A0D33" flood-opacity="0.5" />
+    </filter>
+  </defs>
+
+  <!-- Base Icon Squircle (Superellipse) -->
+  <rect x="4" y="4" width="120" height="120" rx="30" fill="url(#ghz-icon-iris)" />
+
+  <!-- Diagonal Growth Geometric Band -->
+  <path d="M 4 80 L 80 4 L 124 4 L 124 48 L 48 124 L 4 124 Z" fill="url(#ghz-icon-amber)" opacity="0.92" />
+
+  <!-- Glass Inner Highlight Border -->
+  <rect x="5.5" y="5.5" width="117" height="117" rx="28.5" stroke="url(#ghz-icon-highlight)" stroke-width="2.5" />
+
+  <!-- Authentic Central Monogram "غ" with Crisp Drop Shadow -->
+  <g filter="url(#ghz-icon-shadow)">
+    <!-- Arabic Glyph 'غ' -->
+    <text
+      x="64"
+      y="84"
+      font-family="-apple-system, BlinkMacSystemFont, 'IBM Plex Sans Arabic', 'Tajawal', 'Segoe UI', Arial, sans-serif"
+      font-size="68"
+      font-weight="900"
+      fill="#FFFFFF"
+      text-anchor="middle"
+      dominant-baseline="auto"
+    >غ</text>
+
+    <!-- Amber Diacritic Crown Dot with White Ring -->
+    <circle cx="85" cy="36" r="8.5" fill="url(#ghz-icon-amber)" stroke="#FFFFFF" stroke-width="2.5" />
+    <circle cx="85" cy="36" r="3.5" fill="#FFFFFF" opacity="0.9" />
+  </g>
+</svg>

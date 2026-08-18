@@ -1,15 +1,37 @@
+import { companyData } from "./company";
+import { navigationItems } from "./navigation";
+import { servicesData } from "./services";
+import { productsData } from "./products";
+import { projectsData } from "./projects";
+import { blogPostsData } from "./blog";
+import { contactData, rfqSectors, rfqServices, rfqRegions } from "./contact";
+import { siteSeoData } from "./seo";
+
+export * from "./company";
+export * from "./navigation";
+export * from "./services";
+export * from "./products";
+export * from "./projects";
+export * from "./blog";
+export * from "./contact";
+export * from "./seo";
+
+/**
+ * Backward-compatible content tree matching Ghazara V1 component consumption
+ * while referencing the new modular typed foundation.
+ */
 export const content = {
   ar: {
-    brandName: "مؤسسة غزارة للتجارة والتسويق",
-    brandShort: "غزارة",
-    tagline: "حلول تجارية وتسويقية متكاملة تربط الأعمال بالفرص في اليمن والمنطقة",
+    brandName: companyData.brandName.ar,
+    brandShort: companyData.shortName.ar,
+    tagline: companyData.tagline.ar,
     nav: {
       home: "الرئيسية",
       about: "من نحن",
       services: "الخدمات",
       products: "المنتجات",
       projects: "المشاريع",
-      insights: "الرؤى والمقالات",
+      insights: "الرؤى والمدونة",
       contact: "تواصل معنا",
       requestQuote: "طلب عرض سعر",
     },
@@ -29,50 +51,26 @@ export const content = {
     },
     about: {
       eyebrow: "من نحن",
-      title: "مؤسسة غزارة: رؤية استراتيجية للتجارة والتسويق الحديث",
-      p1: "تأسست مؤسسة غزارة للتجارة والتسويق لتكون ركيزة أساسية في تطوير بيئة الأعمال والتجارة والحلول التسويقية. نؤمن بأن النجاح المستدام يتطلب دمج الأصالة التجارية مع الابتكار الرقمي.",
-      p2: "نقدم منظومة متكاملة تشمل التمثيل التجاري، توريد الحلول، التخطيط التسويقي المتقدم، واستشارات النمو المؤسسي لضمان تفوق شركائنا في الأسواق المحلية والإقليمية.",
-      values: [
-        { title: "الاحترافية والموثوقية", desc: "التزام صارم بأعلى معايير الجودة والشفافية في كل تعامل تجاري." },
-        { title: "الابتكار المستمر", desc: "استخدام أحدث الأدوات والمنهجيات التسويقية والرقمية لتحقيق أقصى عائد." },
-        { title: "الشراكة بعيدة المدى", desc: "نعمل كجزء من فريقك لضمان تحقيق أهدافك الاستراتيجية بنجاح." },
-      ]
+      title: companyData.storyP1.ar,
+      p1: companyData.storyP1.ar,
+      p2: companyData.storyP2.ar,
+      values: companyData.values.map((v) => ({ title: v.title.ar, desc: v.desc.ar })),
     },
     services: {
       eyebrow: "خدماتنا المتخصصة",
       title: "حلول مؤسسية مصممة خصيصاً لنمو أعمالك",
       subtitle: "نغطي كافة الاحتياجات التجارية والتسويقية والتقنية لمنشأتك بمستوى احترافي عالي.",
-      list: [
-        {
-          id: "trade",
-          title: "التجارة والتمثيل التجاري",
-          desc: "إدارة الوكالات التجارية، تيسير سلاسل التوريد، والربط التجاري الإقليمي بكفاءة عالية.",
-          icon: "Briefcase"
-        },
-        {
-          id: "marketing",
-          title: "التسويق الرقمي واستراتيجيات النمو",
-          desc: "إدارة الحملات الإعلانية، بناء الهوية البصرية، وتحسين معدلات التحويل للعلامات التجارية.",
-          icon: "TrendingUp"
-        },
-        {
-          id: "digital",
-          title: "تطوير المنصات والحلول التقنية",
-          desc: "تصميم وبناء المواقع الإلكترونية، التطبيقات التجارية، ونظم إدارة علاقات العملاء.",
-          icon: "Code"
-        },
-        {
-          id: "consulting",
-          title: "الاستشارات الاقتصادية ودراسات السوق",
-          desc: "تحليل الفرص الاستثمارية، دراسات جدوى الأسواق، وتقديم الاستشارات الاستراتيجية.",
-          icon: "LineChart"
-        }
-      ]
+      list: servicesData.map((s) => ({
+        id: s.id,
+        title: s.title.ar,
+        desc: s.shortDesc.ar,
+        icon: s.icon,
+      })),
     },
     rfq: {
       eyebrow: "طلب عرض سعر أو استشارة",
       title: "ابدأ مشروعك القادم معنا اليوم",
-      subtitle: "املأ النموذج أدناه وسيقوم فريقنا المختص بدراسة طلبك والتواصل معك خلال 24 ساعة.",
+      subtitle: "املأ النموذج وسيقوم فريقنا المختص بدراسة طلبك والتواصل معك فور استلامه.",
       sectorLabel: "قطاع الأعمال",
       serviceLabel: "الخدمة المطلوبة",
       regionLabel: "النطاق الجغرافي",
@@ -80,51 +78,37 @@ export const content = {
       companyNameLabel: "اسم الشركة / المؤسسة",
       notesLabel: "تفاصيل الطلب أو المشروع",
       submitBtn: "إرسال الطلب الآن",
-      loadingMsg: "جاري إرسال طلبك…",
+      loadingMsg: "جاري معالجة طلبك…",
       successTitle: "تم استلام طلبك بنجاح",
-      successMsg: "شكراً لتواصلك معنا. راجع فريقنا تفاصيل طلبك وسنتواصل معك قريباً لاستكمال الخطوات التالية.",
+      successMsg: "شكراً لتواصلك معنا. راجع فريقنا تفاصيل طلبك وسنتواصل معك لاستكمال الخطوات التالية.",
       successAction: "إرسال طلب آخر",
-      errorMsg: "تعذر إرسال الطلب حالياً. يرجى المحاولة مرة أخرى.",
+      errorMsg: "تعذر إرسال الطلب حالياً. يرجى المحاولة مرة أخرى أو التواصل عبر واتساب مباشرة.",
       requiredMsg: "يرجى إدخال اسم المسؤول واسم الشركة.",
-      sectors: [
-        { id: "retail", label: "التجارة والتجزئة" },
-        { id: "b2b", label: "الخدمات المؤسسية B2B" },
-        { id: "tech", label: "التقنية والمنصات الرقمية" },
-        { id: "services", label: "الخدمات المهنية والاستشارية" },
-      ],
-      servicesList: [
-        { id: "trade", label: "التمثيل التجاري وسلاسل التوريد" },
-        { id: "marketing", label: "التسويق الرقمي وبناء العلامة" },
-        { id: "web", label: "تصميم وتطوير المواقع والمنصات" },
-        { id: "consulting", label: "استشارات الأعمال والتطوير" },
-      ],
-      regions: [
-        { id: "ye", label: "الجمهورية اليمنية" },
-        { id: "gcc", label: "دول مجلس التعاون الخليجي" },
-        { id: "mena", label: "منطقة الشرق الأوسط وشمال إفريقيا" },
-      ]
+      sectors: rfqSectors.map((s) => ({ id: s.id, label: s.label.ar })),
+      servicesList: rfqServices.map((s) => ({ id: s.id, label: s.label.ar })),
+      regions: rfqRegions.map((r) => ({ id: r.id, label: r.label.ar })),
     },
     footer: {
-      about: "مؤسسة غزارة للتجارة والتسويق — شريكك الموثوق لبناء وتطوير الأعمال والحلول الرقمية الحديثة.",
+      about: companyData.tagline.ar,
       quickLinks: "روابط سريعة",
       contactInfo: "معلومات التواصل",
-      address: "اليمن — حضرموت / صنعاء / عدن",
-      email: "contact@ghazara.net",
-      phone: "+967 700 000 000",
+      address: contactData.address.display.ar,
+      email: contactData.email.address,
+      phone: contactData.phone.display,
       rights: "جميع الحقوق محفوظة © 2026 مؤسسة غزارة للتجارة والتسويق.",
-    }
+    },
   },
   en: {
-    brandName: "Ghazara Trading & Marketing",
-    brandShort: "Ghazara",
-    tagline: "Integrated commercial and marketing solutions connecting businesses to opportunities in Yemen and the region.",
+    brandName: companyData.brandName.en,
+    brandShort: companyData.shortName.en,
+    tagline: companyData.tagline.en,
     nav: {
       home: "Home",
       about: "About Us",
       services: "Services",
       products: "Products",
       projects: "Projects",
-      insights: "Insights",
+      insights: "Insights & Blog",
       contact: "Contact Us",
       requestQuote: "Request Quote",
     },
@@ -135,59 +119,35 @@ export const content = {
       description: "Combining deep commercial expertise with advanced digital marketing and regional integration strategies to empower your organization to lead the market with confidence.",
       ctaPrimary: "Request Quote or Consultation",
       ctaSecondary: "Explore Services",
-      statsTitle1: "Years of Leadership",
-      statsValue1: "Trusted Institutional Experience",
-      statsTitle2: "Partners & Clients",
-      statsValue2: "Extensive Partner Network",
-      statsTitle3: "Client Satisfaction",
-      statsValue3: "Commitment to Top Quality",
+      statsTitle1: "Institutional Track Record",
+      statsValue1: "Trusted Experience",
+      statsTitle2: "Partners & Reach",
+      statsValue2: "Wide Business Network",
+      statsTitle3: "Quality Assurance",
+      statsValue3: "Top Industry Standards",
     },
     about: {
       eyebrow: "About Us",
-      title: "Ghazara: Strategic Vision for Modern Trade & Marketing",
-      p1: "Ghazara Trading & Marketing was founded to be a key pillar in developing the business environment, commerce, and marketing solutions. We believe sustainable success requires uniting commercial authenticity with digital innovation.",
-      p2: "We deliver an integrated ecosystem including commercial representation, solution sourcing, advanced marketing planning, and corporate growth consulting to ensure our partners excel locally and regionally.",
-      values: [
-        { title: "Professionalism & Reliability", desc: "Strict adherence to the highest standards of quality and transparency in every transaction." },
-        { title: "Continuous Innovation", desc: "Utilizing state-of-the-art marketing and digital tools to maximize ROI." },
-        { title: "Long-Term Partnership", desc: "Operating as an extension of your team to ensure strategic success." },
-      ]
+      title: companyData.storyP1.en,
+      p1: companyData.storyP1.en,
+      p2: companyData.storyP2.en,
+      values: companyData.values.map((v) => ({ title: v.title.en, desc: v.desc.en })),
     },
     services: {
       eyebrow: "Our Specialized Services",
       title: "Enterprise Solutions Tailored for Your Growth",
       subtitle: "Covering all commercial, marketing, and technical needs for your organization at a professional grade.",
-      list: [
-        {
-          id: "trade",
-          title: "Trade & Commercial Representation",
-          desc: "Managing commercial agencies, supply chain facilitation, and high-efficiency regional trade linking.",
-          icon: "Briefcase"
-        },
-        {
-          id: "marketing",
-          title: "Digital Marketing & Growth Strategies",
-          desc: "Ad campaign management, brand identity building, and conversion rate optimization.",
-          icon: "TrendingUp"
-        },
-        {
-          id: "digital",
-          title: "Platform Development & Tech Solutions",
-          desc: "Web design and development, commercial apps, and CRM systems.",
-          icon: "Code"
-        },
-        {
-          id: "consulting",
-          title: "Economic Consulting & Market Research",
-          desc: "Investment opportunity analysis, market feasibility studies, and strategic advisory.",
-          icon: "LineChart"
-        }
-      ]
+      list: servicesData.map((s) => ({
+        id: s.id,
+        title: s.title.en,
+        desc: s.shortDesc.en,
+        icon: s.icon,
+      })),
     },
     rfq: {
       eyebrow: "Request Quote or Consultation",
       title: "Start Your Next Project With Us Today",
-      subtitle: "Fill out the form below and our specialized team will review your request and get back to you within 24 hours.",
+      subtitle: "Fill out the form below and our team will review your request and reach out promptly.",
       sectorLabel: "Business Sector",
       serviceLabel: "Required Service",
       regionLabel: "Geographic Scope",
@@ -195,38 +155,24 @@ export const content = {
       companyNameLabel: "Company / Organization",
       notesLabel: "Project Details or Notes",
       submitBtn: "Submit Request Now",
-      loadingMsg: "Sending your request…",
+      loadingMsg: "Processing your request…",
       successTitle: "Your request was received successfully",
-      successMsg: "Thank you for contacting us. Our team will review your request and contact you soon with the next steps.",
+      successMsg: "Thank you for contacting us. Our team will review your details and contact you with the next steps.",
       successAction: "Submit another request",
-      errorMsg: "We could not send your request right now. Please try again.",
+      errorMsg: "We could not send your request right now. Please try again or reach out via WhatsApp.",
       requiredMsg: "Please enter the contact name and company name.",
-      sectors: [
-        { id: "retail", label: "Retail & Commerce" },
-        { id: "b2b", label: "B2B Enterprise Services" },
-        { id: "tech", label: "Technology & Digital Platforms" },
-        { id: "services", label: "Professional & Advisory Services" },
-      ],
-      servicesList: [
-        { id: "trade", label: "Commercial Representation & Supply Chain" },
-        { id: "marketing", label: "Digital Marketing & Branding" },
-        { id: "web", label: "Web & Platform Design & Development" },
-        { id: "consulting", label: "Business Consulting & Development" },
-      ],
-      regions: [
-        { id: "ye", label: "Republic of Yemen" },
-        { id: "gcc", label: "Gulf Cooperation Council (GCC)" },
-        { id: "mena", label: "Middle East & North Africa (MENA)" },
-      ]
+      sectors: rfqSectors.map((s) => ({ id: s.id, label: s.label.en })),
+      servicesList: rfqServices.map((s) => ({ id: s.id, label: s.label.en })),
+      regions: rfqRegions.map((r) => ({ id: r.id, label: r.label.en })),
     },
     footer: {
-      about: "Ghazara Trading & Marketing — Your trusted partner for building and scaling modern businesses and digital solutions.",
+      about: companyData.tagline.en,
       quickLinks: "Quick Links",
       contactInfo: "Contact Information",
-      address: "Yemen — Hadhramaut / Sana'a / Aden",
-      email: "contact@ghazara.net",
-      phone: "+967 700 000 000",
+      address: contactData.address.display.en,
+      email: contactData.email.address,
+      phone: contactData.phone.display,
       rights: "All Rights Reserved © 2026 Ghazara Trading & Marketing.",
-    }
-  }
+    },
+  },
 };
