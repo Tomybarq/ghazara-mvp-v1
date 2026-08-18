@@ -79,11 +79,8 @@ jspm_packages/
 *.zip
 
 # Scratch and temporary project documents
-todo*.md
-todo.md
-ideas.md
+todo-*.md
 template.json
-CONTENT_REQUIRED.md
 Ghazara_V2_*.md
 Ghazara_Website_*.md
 MANUS_REPORT.md

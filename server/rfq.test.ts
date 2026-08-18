@@ -111,4 +111,60 @@ describe("rfq.submit conversion flow", () => {
       }),
     ).rejects.toThrow();
   });
+
+  it("accepts inputs at the exact maximum boundary lengths", async () => {
+    createRfqRequest.mockResolvedValueOnce(true);
+    const maxClientName = "A".repeat(120);
+    const maxCompanyName = "B".repeat(160);
+    const maxNotes = "C".repeat(1200);
+
+    const result = await appRouter.createCaller(createPublicContext()).rfq.submit({
+      sector: "industry",
+      service: "consulting",
+      region: "mukalla",
+      clientName: maxClientName,
+      companyName: maxCompanyName,
+      notes: maxNotes,
+    });
+
+    expect(result).toEqual({ saved: true });
+  });
+
+  it("rejects inputs that exceed maximum character limits", async () => {
+    const caller = appRouter.createCaller(createPublicContext());
+
+    // ClientName exceeds 120 chars
+    await expect(
+      caller.rfq.submit({
+        sector: "industry",
+        service: "consulting",
+        region: "mukalla",
+        clientName: "A".repeat(121),
+        companyName: "شركة مقبولة",
+      }),
+    ).rejects.toThrow();
+
+    // CompanyName exceeds 160 chars
+    await expect(
+      caller.rfq.submit({
+        sector: "industry",
+        service: "consulting",
+        region: "mukalla",
+        clientName: "عميل مقبول",
+        companyName: "B".repeat(161),
+      }),
+    ).rejects.toThrow();
+
+    // Notes exceeds 1200 chars
+    await expect(
+      caller.rfq.submit({
+        sector: "industry",
+        service: "consulting",
+        region: "mukalla",
+        clientName: "عميل مقبول",
+        companyName: "شركة مقبولة",
+        notes: "C".repeat(1201),
+      }),
+    ).rejects.toThrow();
+  });
 });

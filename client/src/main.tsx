@@ -8,7 +8,38 @@ import App from "./App";
 import { startLogin } from "./const";
 import "./index.css";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      // 5-minute freshness for institutional content and reference data
+      staleTime: 1000 * 60 * 5,
+      // 15-minute garbage collection window
+      gcTime: 1000 * 60 * 15,
+      // Avoid intrusive background refetches on tab switching
+      refetchOnWindowFocus: false,
+      // Smart retry policy: never retry 4xx, authentication, or bad request errors
+      retry: (failureCount, error) => {
+        if (error instanceof TRPCClientError) {
+          const code = error.data?.code;
+          if (
+            code === "UNAUTHORIZED" ||
+            code === "FORBIDDEN" ||
+            code === "BAD_REQUEST" ||
+            code === "NOT_FOUND" ||
+            code === "PARSE_ERROR"
+          ) {
+            return false;
+          }
+        }
+        return failureCount < 2;
+      },
+    },
+    mutations: {
+      // Strict: never retry mutations automatically to prevent duplicate RFQ transactions
+      retry: false,
+    },
+  },
+});
 
 const redirectToLoginIfUnauthorized = (error: unknown) => {
   if (!(error instanceof TRPCClientError)) return;

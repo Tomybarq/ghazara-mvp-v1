@@ -10,7 +10,7 @@ type CookieCall = {
 
 type AuthenticatedUser = NonNullable<TrpcContext["user"]>;
 
-function createAuthContext(): { ctx: TrpcContext; clearedCookies: CookieCall[] } {
+function createAuthContext(reqOverrides?: Partial<TrpcContext["req"]>): { ctx: TrpcContext; clearedCookies: CookieCall[] } {
   const clearedCookies: CookieCall[] = [];
 
   const user: AuthenticatedUser = {
@@ -30,6 +30,7 @@ function createAuthContext(): { ctx: TrpcContext; clearedCookies: CookieCall[] }
     req: {
       protocol: "https",
       headers: {},
+      ...reqOverrides,
     } as TrpcContext["req"],
     res: {
       clearCookie: (name: string, options: Record<string, unknown>) => {
@@ -42,8 +43,8 @@ function createAuthContext(): { ctx: TrpcContext; clearedCookies: CookieCall[] }
 }
 
 describe("auth.logout", () => {
-  it("clears the session cookie and reports success", async () => {
-    const { ctx, clearedCookies } = createAuthContext();
+  it("clears the session cookie and reports success under HTTPS", async () => {
+    const { ctx, clearedCookies } = createAuthContext({ protocol: "https" });
     const caller = appRouter.createCaller(ctx);
 
     const result = await caller.auth.logout();
@@ -55,6 +56,44 @@ describe("auth.logout", () => {
       maxAge: -1,
       secure: true,
       sameSite: "none",
+      httpOnly: true,
+      path: "/",
+    });
+  });
+
+  it("clears the session cookie under HTTP with x-forwarded-proto https", async () => {
+    const { ctx, clearedCookies } = createAuthContext({
+      protocol: "http",
+      headers: { "x-forwarded-proto": "https" },
+    });
+    const caller = appRouter.createCaller(ctx);
+
+    const result = await caller.auth.logout();
+
+    expect(result).toEqual({ success: true });
+    expect(clearedCookies).toHaveLength(1);
+    expect(clearedCookies[0]?.options).toMatchObject({
+      maxAge: -1,
+      secure: true,
+      sameSite: "none",
+      httpOnly: true,
+      path: "/",
+    });
+  });
+
+  it("sets secure: false when running over plain HTTP without forwarded proto", async () => {
+    const { ctx, clearedCookies } = createAuthContext({
+      protocol: "http",
+      headers: {},
+    });
+    const caller = appRouter.createCaller(ctx);
+
+    const result = await caller.auth.logout();
+
+    expect(result).toEqual({ success: true });
+    expect(clearedCookies[0]?.options).toMatchObject({
+      maxAge: -1,
+      secure: false,
       httpOnly: true,
       path: "/",
     });
