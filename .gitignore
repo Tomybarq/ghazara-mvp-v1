@@ -78,6 +78,19 @@ jspm_packages/
 *.tgz
 *.zip
 
+# Scratch and temporary project documents
+todo*.md
+todo.md
+ideas.md
+template.json
+CONTENT_REQUIRED.md
+Ghazara_V2_*.md
+Ghazara_Website_*.md
+MANUS_REPORT.md
+Master Project Instructions*.md
+V2_BASELINE_AUDIT.md
+V2_CHANGELOG.md
+
 # Yarn Integrity file
 .yarn-integrity
 
