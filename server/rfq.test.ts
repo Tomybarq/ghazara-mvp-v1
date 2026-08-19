@@ -41,6 +41,30 @@ describe("rfq.submit conversion flow", () => {
     });
   });
 
+  it("accepts and processes submission with explicit consent flag", async () => {
+    const payload = {
+      sector: "industrial",
+      service: "digital",
+      region: "gcc",
+      clientName: "فاطمة العمودي",
+      companyName: "مجموعة الأفق الصناعية",
+      notes: "طلب عرض سعر خاص بالتحول الرقمي",
+      consent: true,
+    };
+
+    const result = await appRouter.createCaller(createPublicContext()).rfq.submit(payload);
+
+    expect(result).toEqual({ saved: true });
+    expect(createRfqRequest).toHaveBeenCalledWith({
+      sector: payload.sector,
+      service: payload.service,
+      region: payload.region,
+      clientName: payload.clientName,
+      companyName: payload.companyName,
+      notes: payload.notes,
+    });
+  });
+
   it("handles submission without optional notes gracefully", async () => {
     const payload = {
       sector: "retail",

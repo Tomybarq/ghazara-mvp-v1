@@ -1,11 +1,12 @@
 import { useState, useMemo } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { projectsData } from "@/data/projects";
+import { isPubliclyPublishable } from "@/data/contentApproval";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/seo/SEOHead";
 import SiteBreadcrumb from "@/components/ui/SiteBreadcrumb";
-import { ExternalLink, CheckCircle2, ArrowRight, FolderKanban, Search } from "lucide-react";
+import { ExternalLink, CheckCircle2, ArrowRight, FolderKanban } from "lucide-react";
 import { Link } from "wouter";
 
 export default function ProjectsPage() {
@@ -20,8 +21,9 @@ export default function ProjectsPage() {
   ];
 
   const filteredProjects = useMemo(() => {
-    if (selectedTag === "all") return projectsData;
-    return projectsData.filter((p) => {
+    const publishedList = projectsData.filter(isPubliclyPublishable);
+    if (selectedTag === "all") return publishedList;
+    return publishedList.filter((p) => {
       if (selectedTag === "saas") return p.tag.en.toLowerCase().includes("saas");
       if (selectedTag === "portal") return p.tag.en.toLowerCase().includes("portal");
       if (selectedTag === "infrastructure") return p.tag.en.toLowerCase().includes("infrastructure");
@@ -80,7 +82,20 @@ export default function ProjectsPage() {
 
         {/* Projects Grid */}
         <section className="content-wrap py-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {filteredProjects.length === 0 ? (
+            <div className="bg-card border border-border rounded-3xl p-12 text-center space-y-3">
+              <FolderKanban className="w-10 h-10 text-muted-foreground mx-auto" />
+              <h3 className="font-heading font-bold text-lg">
+                {isAr ? "سجل المشاريع قيد التوثيق والاعتماد" : "Case Studies Pending Verification"}
+              </h3>
+              <p className="text-xs text-muted-foreground max-w-md mx-auto">
+                {isAr
+                  ? "نقوم حالياً بتوثيق ونشر دراسات الحالة المعتمدة وفق معايير الحوكمة. تواصل معنا للاطلاع على سابقة أعمالنا المباشرة."
+                  : "We are currently documenting verified case studies under strict content governance. Contact us for direct portfolio inquiries."}
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {filteredProjects.map((proj) => (
               <div
                 key={proj.id}
@@ -113,30 +128,26 @@ export default function ProjectsPage() {
                   </div>
                 </div>
 
-                <div className="pt-4 border-t border-border">
-                  {proj.externalLink ? (
-                    <a
-                      href={proj.externalLink}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-2 text-xs font-bold text-primary hover:underline"
-                    >
-                      <span>{isAr ? "استعراض رابط المشروع" : "View Live Repository / Portal"}</span>
-                      <ExternalLink className="w-4 h-4" />
-                    </a>
-                  ) : (
-                    <Link
-                      href="/request-quote"
-                      className="inline-flex items-center gap-2 text-xs font-bold text-primary hover:underline"
-                    >
-                      <span>{isAr ? "طلب تنفيذ مشروع مماثل" : "Request Similar Project"}</span>
-                      <ArrowRight className={`w-4 h-4 ${isAr ? "rotate-180" : ""}`} />
-                    </Link>
-                  )}
+                <div className="pt-4 border-t border-border flex flex-wrap items-center justify-between gap-3">
+                  <Link
+                    href={`/projects/${proj.slug}`}
+                    className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:underline"
+                  >
+                    <span>{isAr ? "استعراض دراسة الحالة" : "View Case Study"}</span>
+                    <ArrowRight className={`w-3.5 h-3.5 ${isAr ? "rotate-180" : ""}`} />
+                  </Link>
+
+                  <Link
+                    href={`/request-quote?project=${proj.slug}`}
+                    className="inline-flex items-center gap-1 text-[11px] font-semibold text-muted-foreground hover:text-foreground"
+                  >
+                    <span>{isAr ? "طلب مشروع مماثل" : "Request RFQ"}</span>
+                  </Link>
                 </div>
               </div>
             ))}
-          </div>
+            </div>
+          )}
         </section>
       </main>
 

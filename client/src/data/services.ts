@@ -1,4 +1,4 @@
-import type { LocalizedString } from "./company";
+import type { LocalizedString, ContentApproval } from "./company";
 
 export interface ServiceItem {
   id: "trade" | "marketing" | "digital" | "consulting";
@@ -11,6 +11,7 @@ export interface ServiceItem {
   features: LocalizedString[];
   icon: "Briefcase" | "TrendingUp" | "Code" | "LineChart";
   accent: "amber" | "iris" | "amethyst" | "slate";
+  approval?: ContentApproval;
 }
 
 export const servicesData: ServiceItem[] = [

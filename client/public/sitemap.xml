@@ -4,7 +4,7 @@
   <!-- Homepage -->
   <url>
     <loc>https://ghazara.net/</loc>
-    <lastmod>2026-08-16</lastmod>
+    <lastmod>2026-08-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://ghazara.net/" />
@@ -15,7 +15,7 @@
   <!-- About Us -->
   <url>
     <loc>https://ghazara.net/about</loc>
-    <lastmod>2026-08-16</lastmod>
+    <lastmod>2026-08-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://ghazara.net/about" />
@@ -25,27 +25,27 @@
   <!-- Services -->
   <url>
     <loc>https://ghazara.net/services</loc>
-    <lastmod>2026-08-16</lastmod>
+    <lastmod>2026-08-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://ghazara.net/services" />
     <xhtml:link rel="alternate" hreflang="en" href="https://ghazara.net/services?lang=en" />
   </url>
 
-  <!-- Products & Platforms -->
+  <!-- Products & Platforms Collection -->
   <url>
     <loc>https://ghazara.net/products</loc>
-    <lastmod>2026-08-16</lastmod>
+    <lastmod>2026-08-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://ghazara.net/products" />
     <xhtml:link rel="alternate" hreflang="en" href="https://ghazara.net/products?lang=en" />
   </url>
 
-  <!-- Projects & Case Studies -->
+  <!-- Projects & Case Studies Collection -->
   <url>
     <loc>https://ghazara.net/projects</loc>
-    <lastmod>2026-08-16</lastmod>
+    <lastmod>2026-08-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://ghazara.net/projects" />
@@ -55,7 +55,7 @@
   <!-- Blog & Insights -->
   <url>
     <loc>https://ghazara.net/blog</loc>
-    <lastmod>2026-08-16</lastmod>
+    <lastmod>2026-08-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://ghazara.net/blog" />
@@ -65,7 +65,7 @@
   <!-- Request a Quote (RFQ) -->
   <url>
     <loc>https://ghazara.net/request-quote</loc>
-    <lastmod>2026-08-16</lastmod>
+    <lastmod>2026-08-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://ghazara.net/request-quote" />
@@ -75,7 +75,7 @@
   <!-- Contact Us -->
   <url>
     <loc>https://ghazara.net/contact</loc>
-    <lastmod>2026-08-16</lastmod>
+    <lastmod>2026-08-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://ghazara.net/contact" />

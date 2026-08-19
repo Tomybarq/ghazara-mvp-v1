@@ -9,6 +9,8 @@ interface SEOHeadProps {
   customTitle?: string;
   customDescription?: string;
   customOgImage?: string;
+  customCanonicalPath?: string;
+  noIndex?: boolean;
 }
 
 export default function SEOHead({
@@ -16,13 +18,16 @@ export default function SEOHead({
   customTitle,
   customDescription,
   customOgImage,
+  customCanonicalPath,
+  noIndex = false,
 }: SEOHeadProps) {
   const { lang, isAr } = useLanguage();
   const meta: PageMetadata = siteSeoData[pageKey] || siteSeoData.home;
 
   const pageTitle = customTitle || meta.title[lang];
   const pageDescription = customDescription || meta.description[lang];
-  const canonicalUrl = `${SITE_URL}${meta.canonicalPath === "/" ? "" : meta.canonicalPath}`;
+  const canonicalPath = customCanonicalPath || meta.canonicalPath;
+  const canonicalUrl = `${SITE_URL}${canonicalPath === "/" ? "" : canonicalPath}`;
   const ogImageUrl = customOgImage || `${SITE_URL}/branding/og-cover.svg`;
 
   useEffect(() => {
@@ -56,7 +61,7 @@ export default function SEOHead({
     };
 
     // 2. Standard Meta & Robots
-    const isNoIndex = pageKey === "notFound" || meta.canonicalPath === "/404";
+    const isNoIndex = noIndex || pageKey === "notFound" || pageKey === "hub" || meta.canonicalPath === "/404";
     setMetaTag("name", "robots", isNoIndex ? "noindex, nofollow" : "index, follow");
     setMetaTag("name", "description", pageDescription);
     setMetaTag("name", "keywords", meta.keywords[lang].join(", "));

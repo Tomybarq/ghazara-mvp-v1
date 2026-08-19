@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { rfqSectors, rfqServices, rfqRegions, contactData } from "@/data/contact";
+import { resolvePublishedProduct, resolvePublishedProject } from "@/data/detailRoutes";
 import { trpc } from "@/lib/trpc";
+import { trackConversion } from "@/lib/analytics";
 import { Send, CheckCircle2, MessageCircle, Loader2, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 
@@ -30,10 +32,11 @@ export default function RFQForm({
   const [clientName, setClientName] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [notes, setNotes] = useState("");
+  const [consent, setConsent] = useState(true);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [formError, setFormError] = useState("");
 
-  // Sync initial selections from URL query string if present
+  // Sync initial selections from URL query string if present (validated against catalogs)
   useEffect(() => {
     if (typeof window === "undefined") return;
     const params = new URLSearchParams(window.location.search);
@@ -41,6 +44,7 @@ export default function RFQForm({
     const secParam = params.get("sector");
     const regParam = params.get("region");
     const prodParam = params.get("product");
+    const projParam = params.get("project");
 
     if (srvParam && rfqServices.some((s) => s.id === srvParam)) {
       setService(srvParam);
@@ -51,19 +55,42 @@ export default function RFQForm({
     if (regParam && rfqRegions.some((r) => r.id === regParam)) {
       setRegion(regParam);
     }
+
     if (prodParam && !notes) {
-      setNotes(
-        isAr
-          ? `استفسار بخصوص المنتج/المنصة: ${prodParam}`
-          : `Inquiry regarding product/platform: ${prodParam}`
-      );
+      const matchedProduct = resolvePublishedProduct(prodParam);
+      if (matchedProduct) {
+        setService("software-dev");
+        setNotes(
+          isAr
+            ? `استفسار وطلب عرض سعر بخصوص: ${matchedProduct.title.ar}`
+            : `Inquiry and quotation request for: ${matchedProduct.title.en}`
+        );
+      }
+    } else if (projParam && !notes) {
+      const matchedProject = resolvePublishedProject(projParam);
+      if (matchedProject) {
+        setNotes(
+          isAr
+            ? `استفسار بخصوص تنفيذ مشروع مماثل لـ: ${matchedProject.title.ar}`
+            : `Inquiry regarding execution of a project similar to: ${matchedProject.title.en}`
+        );
+      }
     }
-  }, [isAr, notes]);
+  }, [isAr]);
 
   const rfqMutation = trpc.rfq.submit.useMutation({
     onSuccess: () => {
       setIsSubmitted(true);
       setFormError("");
+      trackConversion({
+        name: "submit_rfq",
+        properties: {
+          sector,
+          service,
+          region,
+          locale: lang,
+        },
+      });
       toast.success(
         isAr ? "تم تسجيل طلبك بنجاح في المنظومة" : "Your request was logged successfully in system"
       );
@@ -113,6 +140,15 @@ export default function RFQForm({
       return;
     }
 
+    if (!consent) {
+      const errMsg = isAr
+        ? "يرجى الموافقة على استخدام بيانات التواصل لمتابعة عرض السعر."
+        : "Please agree to being contacted regarding this quote.";
+      setFormError(errMsg);
+      toast.error(errMsg);
+      return;
+    }
+
     setFormError("");
     rfqMutation.mutate({
       sector,
@@ -121,10 +157,18 @@ export default function RFQForm({
       clientName: clientName.trim(),
       companyName: companyName.trim(),
       notes: notes.trim() || undefined,
+      consent: true,
     });
   };
 
   const handleOpenWhatsApp = () => {
+    trackConversion({
+      name: "click_whatsapp",
+      properties: {
+        source: "rfq_form",
+        locale: lang,
+      },
+    });
     const msg = formatWhatsAppMessage();
     window.open(
       `https://wa.me/${contactData.whatsapp.number}?text=${encodeURIComponent(msg)}`,
@@ -315,6 +359,24 @@ export default function RFQForm({
           }
           className="w-full rounded-2xl border border-border bg-background p-4 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary transition resize-none"
         />
+      </div>
+
+      {/* Consent Checkbox */}
+      <div className="p-3.5 rounded-2xl bg-muted/40 border border-border/60">
+        <label htmlFor="rfq-consent" className="flex items-start gap-3 cursor-pointer select-none">
+          <input
+            id="rfq-consent"
+            type="checkbox"
+            checked={consent}
+            onChange={(e) => setConsent(e.target.checked)}
+            className="mt-0.5 w-4 h-4 rounded border-border text-primary focus:ring-primary cursor-pointer accent-primary shrink-0"
+          />
+          <span className="text-xs text-muted-foreground leading-relaxed">
+            {isAr
+              ? "أوافق على استخدام بيانات التواصل لمتابعة طلب عرض السعر والتواصل مع الإدارة المختصة."
+              : "I consent to having my contact information used to follow up on this request for quote."}
+          </span>
+        </label>
       </div>
 
       {rfqMutation.isPending && (

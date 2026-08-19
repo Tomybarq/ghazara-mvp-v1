@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { contactData } from "@/data/contact";
+import { trackConversion } from "@/lib/analytics";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/seo/SEOHead";
 import SiteBreadcrumb from "@/components/ui/SiteBreadcrumb";
-import { Mail, MapPin, Phone, MessageCircle, Send, CheckCircle2, Clock, Building2, User } from "lucide-react";
+import { Mail, MapPin, Phone, MessageCircle, Send, CheckCircle2, Clock } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "wouter";
 
@@ -45,6 +46,13 @@ export default function ContactPage() {
     setTimeout(() => {
       setIsSubmitting(false);
       setSubmitted(true);
+      trackConversion({
+        name: "submit_contact",
+        properties: {
+          category: inquiryType,
+          locale: lang,
+        },
+      });
       toast.success(
         isAr ? "تم استلام رسالتك وسيتواصل معك فريقنا." : "Your message has been received."
       );
@@ -54,6 +62,14 @@ export default function ContactPage() {
   const selectedInquiry = inquiryTypes.find((t) => t.id === inquiryType);
 
   const handleWhatsAppHandoff = () => {
+    trackConversion({
+      name: "click_whatsapp",
+      properties: {
+        source: "contact_page",
+        locale: lang,
+      },
+    });
+
     const header = isAr ? "*رسالة تواصل واستفسار — مؤسسة غزارة*" : "*Inbound Contact Message — Ghazara*";
     const nameLabel = isAr ? "الاسم" : "Name";
     const orgLabel = isAr ? "الجهة" : "Organization";

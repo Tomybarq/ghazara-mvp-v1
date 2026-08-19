@@ -10,6 +10,14 @@ export interface ValueItem {
   icon?: string;
 }
 
+export interface ContentApproval {
+  status: "approved" | "pending" | "blocked";
+  source?: string;
+  approvedBy?: string;
+  approvedAt?: string;
+  reviewDueAt?: string;
+}
+
 export interface CompanyData {
   legalName: LocalizedString;
   brandName: LocalizedString;
@@ -24,9 +32,16 @@ export interface CompanyData {
     title: LocalizedString;
     desc: LocalizedString;
   }[];
+  approval: ContentApproval;
 }
 
 export const companyData: CompanyData = {
+  approval: {
+    status: "approved",
+    source: "Executive Management Review 2026",
+    approvedBy: "Adnan Al-Hanashi",
+    approvedAt: "2026-08-16",
+  },
   legalName: {
     ar: "مؤسسة غزارة للتجارة والتسويق",
     en: "Ghazara Trading & Marketing",

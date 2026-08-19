@@ -1,4 +1,4 @@
-import type { LocalizedString } from "./company";
+import type { LocalizedString, ContentApproval } from "./company";
 
 export interface BlogPostItem {
   id: string;
@@ -10,6 +10,7 @@ export interface BlogPostItem {
   excerpt: LocalizedString;
   author: LocalizedString;
   tags: string[];
+  approval?: ContentApproval;
 }
 
 export const blogPostsData: BlogPostItem[] = [
@@ -41,6 +42,12 @@ export const blogPostsData: BlogPostItem[] = [
       en: "Ghazara Advisory Team",
     },
     tags: ["تجارة", "تحول رقمي", "سلاسل إمداد", "أتمتة"],
+    approval: {
+      status: "approved",
+      source: "Ghazara Thought Leadership Series",
+      approvedBy: "Adnan Al-Hanashi",
+      approvedAt: "2026-08-16",
+    },
   },
   {
     id: "post-2",
@@ -70,6 +77,12 @@ export const blogPostsData: BlogPostItem[] = [
       en: "Ghazara Digital Team",
     },
     tags: ["تسويق رقمي", "تحسين التحويل", "بيانات", "B2B"],
+    approval: {
+      status: "approved",
+      source: "Ghazara Digital Strategy Paper",
+      approvedBy: "Adnan Al-Hanashi",
+      approvedAt: "2026-08-16",
+    },
   },
   {
     id: "post-3",
@@ -99,5 +112,11 @@ export const blogPostsData: BlogPostItem[] = [
       en: "Ghazara Engineering Team",
     },
     tags: ["شبكات", "ميكروتيك", "بنية تحتية", "أمان"],
+    approval: {
+      status: "approved",
+      source: "Ghazara Engineering Technical Whitepaper",
+      approvedBy: "Adnan Al-Hanashi",
+      approvedAt: "2026-08-16",
+    },
   },
 ];

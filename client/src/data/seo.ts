@@ -158,4 +158,20 @@ export const siteSeoData: Record<string, PageMetadata> = {
     canonicalPath: "/404",
     ogType: "website",
   },
+  hub: {
+    title: {
+      ar: "بوابة الروابط والتحويل | مؤسسة غزارة",
+      en: "Direct Bio & Action Hub | Ghazara",
+    },
+    description: {
+      ar: "بوابة الوصول السريع لروابط وقنوات التواصل المباشر لمؤسسة غزارة للتجارة والتسويق.",
+      en: "Direct action and fast links hub for Ghazara Trading & Marketing.",
+    },
+    keywords: {
+      ar: ["غزارة", "روابط غزارة"],
+      en: ["Ghazara", "Ghazara Hub"],
+    },
+    canonicalPath: "/hub",
+    ogType: "website",
+  },
 };

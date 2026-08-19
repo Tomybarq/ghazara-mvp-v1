@@ -8,7 +8,7 @@ export default function Hub() {
 
   return (
     <>
-      <SEOHead pageKey="home" />
+      <SEOHead pageKey="hub" noIndex />
       <button
         type="button"
         onClick={toggleLanguage}

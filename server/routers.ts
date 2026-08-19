@@ -29,6 +29,7 @@ export const appRouter = router({
           clientName: z.string().trim().min(2).max(120),
           companyName: z.string().trim().min(2).max(160),
           notes: z.string().trim().max(1200).optional(),
+          consent: z.boolean().optional(),
         }),
       )
 	      .mutation(async ({ input }) => {

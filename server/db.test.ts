@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, beforeEach } from "vitest";
+import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import { upsertUser, getUserByOpenId, createRfqRequest, setDb } from "./db";
 
 const mockInsertValues = vi.fn();
@@ -21,6 +21,10 @@ const mockDrizzleDb = {
 describe("Database access layer (server/db.ts)", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    setDb(null);
+  });
+
+  afterEach(() => {
     setDb(null);
   });
 

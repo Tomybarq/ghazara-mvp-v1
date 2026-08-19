@@ -8,6 +8,8 @@ import SiteBreadcrumb from "@/components/ui/SiteBreadcrumb";
 import { ExternalLink, CheckCircle2, ArrowUpRight, Search, Layers, Box } from "lucide-react";
 import { Link } from "wouter";
 
+import { isPubliclyPublishable } from "@/data/contentApproval";
+
 export default function ProductsPage() {
   const { lang, isAr } = useLanguage();
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
@@ -21,7 +23,8 @@ export default function ProductsPage() {
   ];
 
   const filteredProducts = useMemo(() => {
-    return productsData.filter((prod) => {
+    const publishedList = productsData.filter(isPubliclyPublishable);
+    return publishedList.filter((prod) => {
       const matchesCategory =
         selectedCategory === "all" ||
         (selectedCategory === "saas" && prod.category === "saas") ||
@@ -153,26 +156,21 @@ export default function ProductsPage() {
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t border-border flex items-center justify-between">
-                    {prod.externalLink ? (
-                      <a
-                        href={prod.externalLink}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:underline"
-                      >
-                        <span>{isAr ? "استعراض المنصة" : "View Platform"}</span>
-                        <ExternalLink className="w-4 h-4" />
-                      </a>
-                    ) : (
-                      <Link
-                        href={`/request-quote?product=${prod.id}`}
-                        className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:underline"
-                      >
-                        <span>{isAr ? "طلب استشارة أو توريد" : "Request Inquiry"}</span>
-                        <ArrowUpRight className={`w-4 h-4 ${isAr ? "rotate-[-90deg]" : ""}`} />
-                      </Link>
-                    )}
+                  <div className="pt-4 border-t border-border flex flex-wrap items-center justify-between gap-3">
+                    <Link
+                      href={`/products/${prod.slug}`}
+                      className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:underline"
+                    >
+                      <span>{isAr ? "تفاصيل المنتج" : "Product Details"}</span>
+                      <ArrowUpRight className={`w-3.5 h-3.5 ${isAr ? "rotate-[-90deg]" : ""}`} />
+                    </Link>
+
+                    <Link
+                      href={`/request-quote?product=${prod.slug}`}
+                      className="inline-flex items-center gap-1 text-[11px] font-semibold text-muted-foreground hover:text-foreground"
+                    >
+                      <span>{isAr ? "طلب عرض سعر" : "Request RFQ"}</span>
+                    </Link>
                   </div>
                 </div>
               ))}

@@ -55,6 +55,16 @@ describe("Navigation Manifest & Route Integrity", () => {
     expect(homeRoute?.id).toBe("home");
   });
 
+  it("locates dynamic product and project routes via getRouteByPath", () => {
+    const productDetail = getRouteByPath("/products/maeen-ngo-platform");
+    expect(productDetail?.id).toBe("product-detail");
+    expect(productDetail?.href).toBe("/products");
+
+    const projectDetail = getRouteByPath("/projects/moeen-ngo-platform-development");
+    expect(projectDetail?.id).toBe("project-detail");
+    expect(projectDetail?.href).toBe("/projects");
+  });
+
   it("validates contact single source of truth format", () => {
     expect(contactData.phone.value).toBe("967783334002");
     expect(contactData.whatsapp.number).toBe("967783334002");

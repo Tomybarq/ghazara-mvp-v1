@@ -1,6 +1,7 @@
-import type { LocalizedString } from "./company";
+import type { LocalizedString, ContentApproval } from "./company";
 
 export interface ContactInfo {
+  approval: ContentApproval;
   phone: {
     display: string;
     value: string;
@@ -35,6 +36,12 @@ export interface ContactInfo {
 }
 
 export const contactData: ContactInfo = {
+  approval: {
+    status: "approved",
+    source: "Executive Management Contact Sign-Off 2026",
+    approvedBy: "Adnan Al-Hanashi",
+    approvedAt: "2026-08-16",
+  },
   phone: {
     display: "+967 783 334 002",
     value: "967783334002",

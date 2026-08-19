@@ -154,5 +154,28 @@ export function getRouteByPath(pathname: string): NavItem | undefined {
 
   // Normalized path match without trailing slash
   const normalized = pathname.endsWith("/") && pathname !== "/" ? pathname.slice(0, -1) : pathname;
-  return navigationItems.find((item) => item.href === normalized);
+  const normalizedMatch = navigationItems.find((item) => item.href === normalized);
+  if (normalizedMatch) return normalizedMatch;
+
+  // Handle dynamic product routes
+  if (pathname.startsWith("/products/")) {
+    return {
+      id: "product-detail",
+      href: "/products",
+      label: { ar: "تفاصيل المنتج", en: "Product Detail" },
+      breadcrumbLabel: { ar: "المنتجات والمنصات", en: "Products & Platforms" },
+    };
+  }
+
+  // Handle dynamic project routes
+  if (pathname.startsWith("/projects/")) {
+    return {
+      id: "project-detail",
+      href: "/projects",
+      label: { ar: "تفاصيل المشروع", en: "Project Detail" },
+      breadcrumbLabel: { ar: "مشاريعنا", en: "Projects" },
+    };
+  }
+
+  return undefined;
 }
