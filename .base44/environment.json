@@ -1,0 +1,10 @@
+{
+  "previewPort": 3000,
+  "healthPath": "/",
+  "startCommand": "docker compose -f docker-compose.base44.yml up -d",
+  "secrets": [
+    { "name": "OAUTH_SERVER_URL", "description": "Base URL of the external OAuth server (only needed for login features)", "requiredAtBoot": false },
+    { "name": "JWT_SECRET", "description": "Secret used to sign session cookies (placeholder used in dev)", "requiredAtBoot": false },
+    { "name": "BUILT_IN_FORGE_API_KEY", "description": "Forge API key, if AI/storage features are used", "requiredAtBoot": false }
+  ]
+}

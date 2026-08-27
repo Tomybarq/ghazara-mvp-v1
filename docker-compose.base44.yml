@@ -1,0 +1,39 @@
+services:
+  db:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: ghazara_root_pw
+      MYSQL_DATABASE: ghazara
+      MYSQL_USER: ghazara
+      MYSQL_PASSWORD: ghazara_pw
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-pghazara_root_pw"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    volumes:
+      - db_data:/var/lib/mysql
+
+  app:
+    image: node:22
+    working_dir: /app
+    command: sh -c "corepack enable && corepack prepare pnpm@10.15.1 --activate && pnpm install && (pnpm db:push || echo 'db:push skipped') && pnpm dev"
+    environment:
+      NODE_ENV: development
+      PORT: "3000"
+      DATABASE_URL: mysql://ghazara:ghazara_pw@db:3306/ghazara
+      CHOKIDAR_USEPOLLING: "true"
+      BASE44_PUBLIC_HOST_SUFFIX: ${BASE44_PUBLIC_HOST_SUFFIX}
+    env_file:
+      - ./.env.base44-defaults
+      - /run/base44/app.env
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  db_data:
