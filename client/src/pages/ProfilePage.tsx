@@ -16,10 +16,8 @@ import {
   Clock,
   KeyRound,
   LogOut,
-  Mail,
   Save,
   ShieldCheck,
-  User as UserIcon,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/hooks/useAuth";
@@ -28,6 +26,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import SEOHead from "@/components/seo/SEOHead";
+import { AvatarUpload } from "@/components/auth/AvatarUpload";
 import { toast } from "sonner";
 
 export default function ProfilePage() {
@@ -142,20 +141,9 @@ export default function ProfilePage() {
             )}
           </p>
 
-          {/* Identity banner */}
-          <div className="mb-6 flex items-center gap-3 rounded-2xl border border-border bg-card p-6 shadow-sm">
-            <div className="grid size-12 place-items-center rounded-full bg-primary/10 text-primary">
-              <UserIcon className="size-6" />
-            </div>
-            <div>
-              <p className="font-heading font-semibold text-lg">
-                {user?.name ?? (isAr ? "مستخدم" : "User")}
-              </p>
-              <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                <Mail className="size-3.5" />
-                {user?.email ?? "—"}
-              </p>
-            </div>
+          {/* Identity banner with avatar upload */}
+          <div className="mb-6 rounded-2xl border border-border bg-card p-6 shadow-sm">
+            <AvatarUpload />
           </div>
 
           <div className="grid gap-6 lg:grid-cols-2">

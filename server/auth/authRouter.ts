@@ -75,6 +75,13 @@ const updateProfileSchema = z.object({
   email: emailSchema,
 });
 
+const uploadAvatarSchema = z.object({
+  dataUrl: z
+    .string()
+    .min(1, "Image data is required")
+    .max(7 * 1024 * 1024, "Image is too large"),
+});
+
 // Map an AuthError.code to a tRPC error code. Defaults to INTERNAL_SERVER_ERROR
 // so an unexpected failure never surfaces as a 200 or a misleading 4xx.
 function toTRPCError(error: unknown): TRPCError {
@@ -97,6 +104,17 @@ export const authRouter = router({
     .mutation(async ({ input, ctx }) => {
       try {
         return await authService.updateProfile(ctx.user, input);
+      } catch (error) {
+        throw toTRPCError(error);
+      }
+    }),
+
+  /** Upload and set the authenticated user's avatar image. */
+  uploadAvatar: protectedProcedure
+    .input(uploadAvatarSchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        return await authService.updateAvatar(ctx.user, input);
       } catch (error) {
         throw toTRPCError(error);
       }

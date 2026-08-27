@@ -32,6 +32,7 @@ export interface IUserRepository {
     openId: string,
     updates: { name?: string | null; email?: string | null },
   ): Promise<User | null>;
+  updateAvatar(openId: string, avatarUrl: string): Promise<User | null>;
   updatePasswordHash(email: string, passwordHash: string): Promise<void>;
   createPasswordReset(reset: InsertPasswordReset): Promise<void>;
   findValidPasswordReset(token: string): Promise<PasswordReset | null>;
@@ -100,6 +101,18 @@ export class UserRepository implements IUserRepository {
     }
 
     await db.update(users).set(set).where(eq(users.openId, openId));
+    return this.findByOpenId(openId);
+  }
+
+  async updateAvatar(openId: string, avatarUrl: string): Promise<User | null> {
+    const db = await getDb();
+    if (!db) return null;
+
+    await db
+      .update(users)
+      .set({ avatar: avatarUrl })
+      .where(eq(users.openId, openId));
+
     return this.findByOpenId(openId);
   }
 

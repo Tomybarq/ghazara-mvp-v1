@@ -37,7 +37,7 @@ export interface SessionTokenService {
 
 /** Normalised auth result returned to the tRPC layer. */
 export interface AuthResult {
-  user: { id: number; openId: string; name: string | null; email: string | null; role: string };
+  user: { id: number; openId: string; name: string | null; email: string | null; role: string; avatar: string | null };
   /** The JWT to set as the session cookie. */
   sessionToken: string;
 }
@@ -216,6 +216,50 @@ export class AuthService {
   }
 
   /**
+   * Upload and set the authenticated user's avatar image.
+   * Accepts a base64 data URL (e.g. "data:image/png;base64,..."), uploads the
+   * decoded buffer to S3 via the storage helper, stores the resulting URL on
+   * the user row, and returns the stripped safe-user shape.
+   */
+  async updateAvatar(
+    user: User,
+    input: { dataUrl: string },
+  ): Promise<AuthResult["user"]> {
+    const match = input.dataUrl.match(/^data:([^;]+);base64,(.+)$/);
+    if (!match) {
+      throw new AuthError("BAD_REQUEST", "Invalid image data");
+    }
+
+    const [, contentType, base64] = match;
+
+    const allowedTypes = ["image/png", "image/jpeg", "image/jpg", "image/webp", "image/gif"];
+    if (!allowedTypes.includes(contentType)) {
+      throw new AuthError("BAD_REQUEST", "Unsupported image format");
+    }
+
+    const buffer = Buffer.from(base64, "base64");
+
+    if (buffer.length > 5 * 1024 * 1024) {
+      throw new AuthError("BAD_REQUEST", "Image must be under 5 MB");
+    }
+
+    const ext = contentType.split("/")[1];
+    const { storagePut } = await import("../storage");
+    const { url } = await storagePut(
+      `avatars/${user.openId}.${ext}`,
+      buffer,
+      contentType,
+    );
+
+    const updated = await this.users.updateAvatar(user.openId, url);
+    if (!updated) {
+      throw new AuthError("INTERNAL_SERVER_ERROR", "Failed to update avatar");
+    }
+
+    return toSafeUser(updated);
+  }
+
+  /**
    * Generate a single-use reset token for the given email and email it to the
    * user. Always resolves — never reveals whether the email has an account —
    * so an attacker cannot enumerate registered addresses. If no account
@@ -279,13 +323,14 @@ function toSafeUser(user: User): AuthResult["user"] {
     name: user.name,
     email: user.email,
     role: user.role,
+    avatar: user.avatar,
   };
 }
 
 /** Error carrying a tRPC-mappable code, so the router maps cleanly. */
 export class AuthError extends Error {
   constructor(
-    public readonly code: "CONFLICT" | "UNAUTHORIZED" | "INTERNAL_SERVER_ERROR",
+    public readonly code: "CONFLICT" | "UNAUTHORIZED" | "INTERNAL_SERVER_ERROR" | "BAD_REQUEST",
     message: string,
   ) {
     super(message);

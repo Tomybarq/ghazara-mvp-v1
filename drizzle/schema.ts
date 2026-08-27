@@ -23,6 +23,8 @@ export const users = mysqlTable("users", {
    */
   passwordHash: varchar("passwordHash", { length: 255 }),
   role: mysqlEnum("role", ["user", "admin"]).default("user").notNull(),
+  /** URL of the user's avatar image (served via /manus-storage proxy). Null until they upload one. */
+  avatar: varchar("avatar", { length: 512 }),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
   lastSignedIn: timestamp("lastSignedIn").defaultNow().notNull(),
