@@ -8,6 +8,13 @@
       "when": 1786830908560,
       "tag": "0000_lethal_mephistopheles",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1787843504625,
+      "tag": "0001_greedy_nighthawk",
+      "breakpoints": true
     }
   ]
 }

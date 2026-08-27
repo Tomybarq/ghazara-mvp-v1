@@ -79,6 +79,12 @@ export default function Header() {
 
         {/* Desktop Actions & Language Switcher */}
         <div className="hidden md:flex items-center gap-3.5">
+          <Link
+            href="/dashboard"
+            className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-md px-2 py-1"
+          >
+            {isAr ? "تسجيل الدخول" : "Login"}
+          </Link>
           <button
             type="button"
             onClick={toggleLanguage}
