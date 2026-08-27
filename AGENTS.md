@@ -8,3 +8,4 @@
 - The app boots fine without OAuth/Forge credentials: it logs `[OAuth] ERROR: OAUTH_SERVER_URL is not configured` and all public pages still work. Only login-related routes need it.
 - `pnpm install` warns about ignored build scripts (@tailwindcss/oxide, esbuild); harmless, the app builds and runs.
 - Tests: `docker compose -f docker-compose.base44.yml exec app pnpm test`; typecheck: `pnpm check`.
+- Forgot password flow: `/forgot-password` (request reset) → email with link → `/reset-password?token=...` (set new password). Tokens are single-use, expire after 30 min, stored in `passwordResets` table. Email delivery logs to console in dev (no SMTP configured); set `SMTP_URL` secret + install nodemailer for production email.

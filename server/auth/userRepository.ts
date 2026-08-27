@@ -12,15 +12,26 @@
  * consistent null-or-object contract that callers can rely on without a third
  * "not loaded" state.
  */
-import { and, eq, isNotNull } from "drizzle-orm";
+import { and, eq, isNull, isNotNull } from "drizzle-orm";
 import { getDb } from "../db";
-import { users, type InsertUser, type User } from "../../drizzle/schema";
+import {
+  passwordResets,
+  users,
+  type InsertPasswordReset,
+  type InsertUser,
+  type PasswordReset,
+  type User,
+} from "../../drizzle/schema";
 
 export interface IUserRepository {
   findByEmail(email: string): Promise<User | null>;
   findByOpenId(openId: string): Promise<User | null>;
   create(user: InsertUser): Promise<User>;
   updateLastSignedIn(openId: string): Promise<void>;
+  updatePasswordHash(email: string, passwordHash: string): Promise<void>;
+  createPasswordReset(reset: InsertPasswordReset): Promise<void>;
+  findValidPasswordReset(token: string): Promise<PasswordReset | null>;
+  markPasswordResetUsed(token: string): Promise<void>;
 }
 
 /**
@@ -77,5 +88,51 @@ export class UserRepository implements IUserRepository {
       .update(users)
       .set({ lastSignedIn: new Date() })
       .where(eq(users.openId, openId));
+  }
+
+  async updatePasswordHash(email: string, passwordHash: string): Promise<void> {
+    const db = await getDb();
+    if (!db) return;
+
+    await db
+      .update(users)
+      .set({ passwordHash })
+      .where(eq(users.email, email));
+  }
+
+  async createPasswordReset(reset: InsertPasswordReset): Promise<void> {
+    const db = await getDb();
+    if (!db) return;
+
+    await db.insert(passwordResets).values(reset);
+  }
+
+  async findValidPasswordReset(token: string): Promise<PasswordReset | null> {
+    const db = await getDb();
+    if (!db) return null;
+
+    // A reset token is valid only if it exists, has not been used (usedAt is
+    // null), and has not expired. We filter on token + unused at the DB level,
+    // then check expiry in JS to keep the query portable.
+    const rows = await db
+      .select()
+      .from(passwordResets)
+      .where(and(eq(passwordResets.token, token), isNull(passwordResets.usedAt)))
+      .limit(1);
+
+    const reset = rows[0] ?? null;
+    if (!reset) return null;
+    if (new Date(reset.expiresAt) < new Date()) return null;
+    return reset;
+  }
+
+  async markPasswordResetUsed(token: string): Promise<void> {
+    const db = await getDb();
+    if (!db) return;
+
+    await db
+      .update(passwordResets)
+      .set({ usedAt: new Date() })
+      .where(eq(passwordResets.token, token));
   }
 }

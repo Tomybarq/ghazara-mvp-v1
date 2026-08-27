@@ -61,6 +61,15 @@ const loginSchema = z.object({
   password: z.string().min(1, "Password is required").max(128),
 });
 
+const forgotPasswordSchema = z.object({
+  email: emailSchema,
+});
+
+const resetPasswordSchema = z.object({
+  token: z.string().min(16, "Invalid reset token"),
+  password: passwordSchema,
+});
+
 // Map an AuthError.code to a tRPC error code. Defaults to INTERNAL_SERVER_ERROR
 // so an unexpected failure never surfaces as a 200 or a misleading 4xx.
 function toTRPCError(error: unknown): TRPCError {
@@ -110,5 +119,32 @@ export const authRouter = router({
       const cookieOptions = getSessionCookieOptions(ctx.req);
       ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
       return { success: true } as const;
+    }),
+
+  /**
+   * Request a password reset email. Always returns success — never reveals
+   * whether the email has an account, to prevent enumeration.
+   */
+  requestPasswordReset: publicProcedure
+    .input(forgotPasswordSchema)
+    .mutation(async ({ input }) => {
+      try {
+        await authService.requestPasswordReset(input);
+        return { success: true } as const;
+      } catch (error) {
+        throw toTRPCError(error);
+      }
+    }),
+
+  /** Validate a reset token and set a new password. */
+  resetPassword: publicProcedure
+    .input(resetPasswordSchema)
+    .mutation(async ({ input }) => {
+      try {
+        await authService.resetPassword(input);
+        return { success: true } as const;
+      } catch (error) {
+        throw toTRPCError(error);
+      }
     }),
 });

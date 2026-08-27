@@ -206,6 +206,18 @@ export default function AuthForm({ onAuthenticated }: AuthFormProps) {
           </motion.div>
         </AnimatePresence>
 
+        {/* "Forgot password?" link — shown only in login mode, aligned right. */}
+        {mode === "login" && (
+          <div className="flex justify-end -mt-1">
+            <a
+              href="/forgot-password"
+              className="text-xs text-muted-foreground hover:text-primary transition-colors"
+            >
+              {isAr ? "نسيت كلمة المرور؟" : "Forgot password?"}
+            </a>
+          </div>
+        )}
+
         {/* Server error — animated in so it draws attention without startling. */}
         <AnimatePresence>
           {serverError && (

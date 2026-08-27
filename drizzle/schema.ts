@@ -45,3 +45,21 @@ export const rfqRequests = mysqlTable("rfqRequests", {
 
 export type RfqRequest = typeof rfqRequests.$inferSelect;
 export type InsertRfqRequest = typeof rfqRequests.$inferInsert;
+
+/**
+ * Password reset tokens.
+ * Each row is a single-use, time-limited token bound to a user's email.
+ * `usedAt` marks consumption so a token can never be replayed. The token itself
+ * is a 64-char hex string (32 random bytes) — enough entropy to be unguessable.
+ */
+export const passwordResets = mysqlTable("passwordResets", {
+  id: int("id").autoincrement().primaryKey(),
+  email: varchar("email", { length: 320 }).notNull(),
+  token: varchar("token", { length: 128 }).notNull().unique(),
+  expiresAt: timestamp("expiresAt").notNull(),
+  usedAt: timestamp("usedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type PasswordReset = typeof passwordResets.$inferSelect;
+export type InsertPasswordReset = typeof passwordResets.$inferInsert;

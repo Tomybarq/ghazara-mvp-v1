@@ -5,6 +5,7 @@
   "secrets": [
     { "name": "OAUTH_SERVER_URL", "description": "Base URL of the external OAuth server (only needed for login features)", "requiredAtBoot": false },
     { "name": "JWT_SECRET", "description": "Secret used to sign session cookies (placeholder used in dev)", "requiredAtBoot": false },
-    { "name": "BUILT_IN_FORGE_API_KEY", "description": "Forge API key, if AI/storage features are used", "requiredAtBoot": false }
+    { "name": "BUILT_IN_FORGE_API_KEY", "description": "Forge API key, if AI/storage features are used", "requiredAtBoot": false },
+    { "name": "SMTP_URL", "description": "SMTP connection string for sending password reset emails (e.g. smtp://user:pass@host:port). Optional — in dev without it, reset links are logged to the server console.", "requiredAtBoot": false }
   ]
 }
