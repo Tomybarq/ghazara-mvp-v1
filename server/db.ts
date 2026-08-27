@@ -1,7 +1,15 @@
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, InsertRfqRequest, rfqRequests, users } from "../drizzle/schema";
+import {
+  InsertUser,
+  InsertRfqRequest,
+  InsertActivityLog,
+  activityLog,
+  rfqRequests,
+  users,
+} from "../drizzle/schema";
 import { ENV } from './_core/env';
+import { ADMIN_EMAILS } from '@shared/const';
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
@@ -63,6 +71,9 @@ export async function upsertUser(user: InsertUser): Promise<void> {
     } else if (user.openId === ENV.ownerOpenId) {
       values.role = 'admin';
       updateSet.role = 'admin';
+    } else if (user.email && ADMIN_EMAILS.has(user.email.toLowerCase())) {
+      values.role = 'admin';
+      updateSet.role = 'admin';
     }
 
     if (!values.lastSignedIn) {
@@ -103,4 +114,45 @@ export async function createRfqRequest(request: InsertRfqRequest): Promise<boole
 
   await db.insert(rfqRequests).values(request);
   return true;
+}
+
+/**
+ * Append an entry to the activity log. Never throws — a logging failure
+ * must not break the user-facing operation that triggered it.
+ */
+export async function logActivity(entry: InsertActivityLog): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  try {
+    await db.insert(activityLog).values(entry);
+  } catch (error) {
+    console.warn("[ActivityLog] Failed to log entry:", error);
+  }
+}
+
+/** Fetch the most recent activity log entries for the admin dashboard. */
+export async function getRecentActivities(limit = 20) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(activityLog).orderBy(desc(activityLog.createdAt)).limit(limit);
+}
+
+/** Fetch all users ordered by most recently active, for the admin dashboard. */
+export async function getAllUsers() {
+  const db = await getDb();
+  if (!db) return [];
+  return db
+    .select({
+      id: users.id,
+      openId: users.openId,
+      name: users.name,
+      email: users.email,
+      role: users.role,
+      loginMethod: users.loginMethod,
+      createdAt: users.createdAt,
+      updatedAt: users.updatedAt,
+      lastSignedIn: users.lastSignedIn,
+    })
+    .from(users)
+    .orderBy(desc(users.lastSignedIn));
 }

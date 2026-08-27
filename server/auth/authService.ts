@@ -23,6 +23,7 @@ import { randomBytes } from "node:crypto";
 import { nanoid } from "nanoid";
 import { hashPassword, verifyPassword } from "./password";
 import { sendEmail } from "../_core/email";
+import { logActivity } from "../db";
 import type { IUserRepository } from "./userRepository";
 import type { User } from "../../drizzle/schema";
 
@@ -85,6 +86,14 @@ export class AuthService {
       { expiresInMs: SESSION_TTL_MS },
     );
 
+    await logActivity({
+      userId: created.id,
+      userOpenId: created.openId,
+      userName: created.name,
+      type: "register",
+      description: `${created.name ?? "New user"} registered an account`,
+    });
+
     return { user: toSafeUser(created), sessionToken };
   }
 
@@ -118,6 +127,14 @@ export class AuthService {
       { expiresInMs: SESSION_TTL_MS },
     );
 
+    await logActivity({
+      userId: user.id,
+      userOpenId: user.openId,
+      userName: user.name,
+      type: "login",
+      description: `${user.name ?? "User"} signed in`,
+    });
+
     return { user: toSafeUser(user), sessionToken };
   }
 
@@ -147,7 +164,55 @@ export class AuthService {
       throw new AuthError("INTERNAL_SERVER_ERROR", "Failed to update profile");
     }
 
+    await logActivity({
+      userId: updated.id,
+      userOpenId: updated.openId,
+      userName: updated.name,
+      type: "profile_update",
+      description: `${updated.name ?? "User"} updated their profile`,
+    });
+
     return toSafeUser(updated);
+  }
+
+  /**
+   * Admin-only: create a new credentials user on behalf of someone else.
+   * Does NOT mint a session — the admin isn't logging in as the new user.
+   * Rejects duplicate emails. Logs the creation as a "user_created" activity
+   * attributed to the admin actor.
+   */
+  async addUser(
+    actor: User,
+    input: { name: string; email: string; password: string },
+  ): Promise<AuthResult["user"]> {
+    const email = input.email.toLowerCase().trim();
+
+    const existing = await this.users.findByEmail(email);
+    if (existing) {
+      throw new AuthError("CONFLICT", "An account with this email already exists");
+    }
+
+    const passwordHash = await hashPassword(input.password);
+    const openId = `${CRED_OPEN_ID_PREFIX}${nanoid(21)}`;
+
+    const created = await this.users.create({
+      openId,
+      name: input.name.trim(),
+      email,
+      loginMethod: "email",
+      passwordHash,
+      lastSignedIn: new Date(),
+    });
+
+    await logActivity({
+      userId: created.id,
+      userOpenId: created.openId,
+      userName: created.name,
+      type: "user_created",
+      description: `${actor.name ?? "Admin"} created a new user: ${created.name ?? email}`,
+    });
+
+    return toSafeUser(created);
   }
 
   /**

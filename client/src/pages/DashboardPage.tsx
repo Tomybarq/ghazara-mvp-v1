@@ -9,6 +9,7 @@
 import { useLocation, Link } from "wouter";
 import { motion } from "framer-motion";
 import { LogOut, ShieldCheck, Mail, User as UserIcon } from "lucide-react";
+import { ADMIN_EMAILS } from "@shared/const";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -53,6 +54,14 @@ export default function DashboardPage() {
             <Link href="/" className="text-sm text-muted-foreground hover:text-foreground">
               {t("الرئيسية", "Home")}
             </Link>
+            <Link href="/profile" className="text-sm text-muted-foreground hover:text-foreground">
+              {t("الملف الشخصي", "Profile")}
+            </Link>
+            {(user?.role === "admin" || ADMIN_EMAILS.has(user?.email ?? "")) && (
+              <Link href="/admin" className="text-sm text-primary hover:text-primary/80 font-medium">
+                {t("لوحة المشرف", "Admin")}
+              </Link>
+            )}
             <Button
               variant="outline"
               size="sm"

@@ -63,3 +63,28 @@ export const passwordResets = mysqlTable("passwordResets", {
 
 export type PasswordReset = typeof passwordResets.$inferSelect;
 export type InsertPasswordReset = typeof passwordResets.$inferInsert;
+
+/**
+ * Activity log — append-only audit trail of user and account events.
+ * Each row records who did what and when, so the admin dashboard can show a
+ * chronological feed of recent activity and account changes.
+ */
+export const activityLog = mysqlTable("activityLog", {
+  id: int("id").autoincrement().primaryKey(),
+  /** The user the activity concerns (may differ from the actor, e.g. admin creating a user). */
+  userId: int("userId"),
+  userOpenId: varchar("userOpenId", { length: 64 }),
+  userName: varchar("userName", { length: 120 }),
+  type: mysqlEnum("type", [
+    "register",
+    "login",
+    "profile_update",
+    "user_created",
+    "role_change",
+  ]).notNull(),
+  description: text("description"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ActivityLog = typeof activityLog.$inferSelect;
+export type InsertActivityLog = typeof activityLog.$inferInsert;

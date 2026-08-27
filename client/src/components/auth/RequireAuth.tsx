@@ -12,6 +12,7 @@
  */
 import type { ComponentType } from "react";
 import { Redirect, useLocation } from "wouter";
+import { ADMIN_EMAILS } from "@shared/const";
 import { useAuth } from "@/hooks/useAuth";
 import PageLoader from "@/components/ui/PageLoader";
 
@@ -34,4 +35,26 @@ export function requireAuth<P extends object>(Page: ComponentType<P>) {
     return <Page {...props} />;
   }
   return Guarded;
+}
+
+/** Higher-order guard: wraps a page so it only mounts for admin users. */
+export function requireAdmin<P extends object>(Page: ComponentType<P>) {
+  function AdminGuarded(props: P) {
+    const { user, isLoading } = useAuth();
+
+    if (isLoading) return <PageLoader />;
+
+    if (!user) {
+      return <Redirect to="/auth" />;
+    }
+
+    // Admin access via DB role OR the RLS admin email allowlist.
+    const isAdmin = user.role === "admin" || ADMIN_EMAILS.has(user.email ?? "");
+    if (!isAdmin) {
+      return <Redirect to="/dashboard" />;
+    }
+
+    return <Page {...props} />;
+  }
+  return AdminGuarded;
 }

@@ -31,8 +31,9 @@ const ForgotPasswordPage = lazy(() => import("./pages/ForgotPasswordPage"));
 const ResetPasswordPage = lazy(() => import("./pages/ResetPasswordPage"));
 const DashboardPage = lazy(() => import("./pages/DashboardPage"));
 const ProfilePage = lazy(() => import("./pages/ProfilePage"));
+const AdminDashboardPage = lazy(() => import("./pages/AdminDashboardPage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
-import { requireAuth } from "@/components/auth/RequireAuth";
+import { requireAuth, requireAdmin } from "@/components/auth/RequireAuth";
 
 function Router() {
   return (
@@ -54,6 +55,7 @@ function Router() {
           <Route path="/reset-password" component={ResetPasswordPage} />
           <Route path="/dashboard" component={requireAuth(DashboardPage)} />
           <Route path="/profile" component={requireAuth(ProfilePage)} />
+          <Route path="/admin" component={requireAdmin(AdminDashboardPage)} />
           <Route path="/404" component={NotFound} />
           <Route component={NotFound} />
         </Switch>
