@@ -17,7 +17,7 @@ import { TRPCError } from "@trpc/server";
 import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "../_core/cookies";
 import { sdk } from "../_core/sdk";
-import { publicProcedure, router } from "../_core/trpc";
+import { publicProcedure, protectedProcedure, router } from "../_core/trpc";
 import { ENV } from "../_core/env";
 import { AuthService, type SessionTokenService } from "./authService";
 import { UserRepository } from "./userRepository";
@@ -70,6 +70,11 @@ const resetPasswordSchema = z.object({
   password: passwordSchema,
 });
 
+const updateProfileSchema = z.object({
+  name: z.string().trim().min(2, "Name is too short").max(120, "Name is too long"),
+  email: emailSchema,
+});
+
 // Map an AuthError.code to a tRPC error code. Defaults to INTERNAL_SERVER_ERROR
 // so an unexpected failure never surfaces as a 200 or a misleading 4xx.
 function toTRPCError(error: unknown): TRPCError {
@@ -85,6 +90,17 @@ function toTRPCError(error: unknown): TRPCError {
 export const authRouter = router({
   /** Returns the authenticated user from context, or null if anonymous. */
   me: publicProcedure.query(opts => opts.ctx.user),
+
+  /** Update the authenticated user's personal information (name and email). */
+  updateProfile: protectedProcedure
+    .input(updateProfileSchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        return await authService.updateProfile(ctx.user, input);
+      } catch (error) {
+        throw toTRPCError(error);
+      }
+    }),
 
   /** Create a credentials account and establish a session. */
   register: publicProcedure

@@ -122,6 +122,35 @@ export class AuthService {
   }
 
   /**
+   * Update the authenticated user's profile (name and email).
+   * If the email is changing, reject duplicates so each account keeps a
+   * unique address. Returns the stripped safe-user shape so the client can
+   * refresh its cached session without an extra round-trip.
+   */
+  async updateProfile(
+    user: User,
+    input: { name: string; email: string },
+  ): Promise<AuthResult["user"]> {
+    const email = input.email.toLowerCase().trim();
+    const name = input.name.trim();
+
+    // Only check for duplicates when the email is actually changing.
+    if (email !== (user.email ?? "")) {
+      const existing = await this.users.findByEmail(email);
+      if (existing && existing.openId !== user.openId) {
+        throw new AuthError("CONFLICT", "An account with this email already exists");
+      }
+    }
+
+    const updated = await this.users.updateProfile(user.openId, { name, email });
+    if (!updated) {
+      throw new AuthError("INTERNAL_SERVER_ERROR", "Failed to update profile");
+    }
+
+    return toSafeUser(updated);
+  }
+
+  /**
    * Generate a single-use reset token for the given email and email it to the
    * user. Always resolves — never reveals whether the email has an account —
    * so an attacker cannot enumerate registered addresses. If no account

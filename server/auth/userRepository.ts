@@ -28,6 +28,10 @@ export interface IUserRepository {
   findByOpenId(openId: string): Promise<User | null>;
   create(user: InsertUser): Promise<User>;
   updateLastSignedIn(openId: string): Promise<void>;
+  updateProfile(
+    openId: string,
+    updates: { name?: string | null; email?: string | null },
+  ): Promise<User | null>;
   updatePasswordHash(email: string, passwordHash: string): Promise<void>;
   createPasswordReset(reset: InsertPasswordReset): Promise<void>;
   findValidPasswordReset(token: string): Promise<PasswordReset | null>;
@@ -78,6 +82,25 @@ export class UserRepository implements IUserRepository {
     // the caller gets timestamps and defaults populated by the DB.
     const created = await this.findByOpenId(user.openId);
     return created ?? ({ ...user, id: row.insertId } as unknown as User);
+  }
+
+  async updateProfile(
+    openId: string,
+    updates: { name?: string | null; email?: string | null },
+  ): Promise<User | null> {
+    const db = await getDb();
+    if (!db) return null;
+
+    const set: Record<string, unknown> = {};
+    if (updates.name !== undefined) set.name = updates.name;
+    if (updates.email !== undefined) set.email = updates.email;
+
+    if (Object.keys(set).length === 0) {
+      return this.findByOpenId(openId);
+    }
+
+    await db.update(users).set(set).where(eq(users.openId, openId));
+    return this.findByOpenId(openId);
   }
 
   async updateLastSignedIn(openId: string): Promise<void> {
