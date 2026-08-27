@@ -41,17 +41,21 @@ export function requireAuth<P extends object>(Page: ComponentType<P>) {
 export function requireAdmin<P extends object>(Page: ComponentType<P>) {
   function AdminGuarded(props: P) {
     const { user, isLoading } = useAuth();
+    const [location] = useLocation();
 
     if (isLoading) return <PageLoader />;
 
     if (!user) {
-      return <Redirect to="/auth" />;
+      // Preserve the attempted route so login can return the user here.
+      const redirect = encodeURIComponent(location);
+      return <Redirect to={`/auth?redirect=${redirect}`} />;
     }
 
     // Admin access via DB role OR the RLS admin email allowlist.
     const isAdmin = user.role === "admin" || ADMIN_EMAILS.has(user.email ?? "");
     if (!isAdmin) {
-      return <Redirect to="/dashboard" />;
+      // Regular users can only see their own profile — bounce them there.
+      return <Redirect to="/profile" />;
     }
 
     return <Page {...props} />;

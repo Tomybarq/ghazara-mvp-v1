@@ -53,7 +53,7 @@ function Router() {
           <Route path="/auth" component={AuthPage} />
           <Route path="/forgot-password" component={ForgotPasswordPage} />
           <Route path="/reset-password" component={ResetPasswordPage} />
-          <Route path="/dashboard" component={requireAuth(DashboardPage)} />
+          <Route path="/dashboard" component={requireAdmin(DashboardPage)} />
           <Route path="/profile" component={requireAuth(ProfilePage)} />
           <Route path="/admin" component={requireAdmin(AdminDashboardPage)} />
           <Route path="/404" component={NotFound} />
