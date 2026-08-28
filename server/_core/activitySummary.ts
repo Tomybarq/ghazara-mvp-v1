@@ -14,9 +14,12 @@
  * Without the token the summary still runs but logs to the console instead of
  * sending real mail, so the feature is fully testable in dev.
  */
-import { AccountApi, Configuration, SendApi } from "hostinger-mail-api-sdk";
 import { ENV } from "./env";
 import { getAllUsers, getActivitiesSince } from "../db";
+import type { ActivityLog } from "../../drizzle/schema";
+
+/** The shape returned by getAllUsers — a subset of User (no passwordHash/avatar). */
+type UserInfo = Awaited<ReturnType<typeof getAllUsers>>[number];
 
 const SUMMARY_WINDOW_HOURS = 24;
 const DAY_MS = 1000 * 60 * 60 * 24;
@@ -28,6 +31,7 @@ let cachedMailboxResourceId: string | null = null;
 async function getMailboxResourceId(): Promise<string | null> {
   if (cachedMailboxResourceId) return cachedMailboxResourceId;
 
+  const { AccountApi, Configuration } = await import("hostinger-mail-api-sdk");
   const configuration = new Configuration({ accessToken: ENV.hostingerMailApiToken });
   const account = new AccountApi(configuration);
   const { data } = await account.getCurrentAccount();
@@ -44,7 +48,7 @@ async function getMailboxResourceId(): Promise<string | null> {
 }
 
 /** Build a readable HTML digest of the recent activity. */
-function buildSummaryHtml(activities, users, windowStart: Date): string {
+function buildSummaryHtml(activities: ActivityLog[], users: UserInfo[], windowStart: Date): string {
   const dateStr = windowStart.toISOString().slice(0, 10);
 
   const rows = activities.length
@@ -119,7 +123,7 @@ function buildSummaryHtml(activities, users, windowStart: Date): string {
 }
 
 /** Plain-text fallback of the digest (for clients without HTML rendering). */
-function buildSummaryText(activities, windowStart: Date): string {
+function buildSummaryText(activities: ActivityLog[], windowStart: Date): string {
   const dateStr = windowStart.toISOString().slice(0, 10);
   if (!activities.length) return `Ghazara — Daily Activity Summary (${dateStr})\n\nNo activity in the last 24 hours.`;
   const lines = activities.map((a) => {
@@ -157,6 +161,7 @@ export async function sendDailyActivitySummary(): Promise<boolean> {
         return false;
       }
 
+      const { Configuration, SendApi } = await import("hostinger-mail-api-sdk");
       const configuration = new Configuration({ accessToken: ENV.hostingerMailApiToken });
       const sendApi = new SendApi(configuration);
       await sendApi.sendEmail(mailboxResourceId, {
