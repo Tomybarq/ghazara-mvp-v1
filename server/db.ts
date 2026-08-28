@@ -1,4 +1,4 @@
-import { desc, eq } from "drizzle-orm";
+import { desc, eq, gt } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import {
   InsertUser,
@@ -135,6 +135,17 @@ export async function getRecentActivities(limit = 20) {
   const db = await getDb();
   if (!db) return [];
   return db.select().from(activityLog).orderBy(desc(activityLog.createdAt)).limit(limit);
+}
+
+/** Fetch all activity log entries created since the given date (for daily summary emails). */
+export async function getActivitiesSince(since: Date) {
+  const db = await getDb();
+  if (!db) return [];
+  return db
+    .select()
+    .from(activityLog)
+    .where(gt(activityLog.createdAt, since))
+    .orderBy(desc(activityLog.createdAt));
 }
 
 /** Fetch all users ordered by most recently active, for the admin dashboard. */

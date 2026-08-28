@@ -8,4 +8,7 @@ export const ENV = {
   forgeApiUrl: process.env.BUILT_IN_FORGE_API_URL ?? "",
   forgeApiKey: process.env.BUILT_IN_FORGE_API_KEY ?? "",
   smtpUrl: process.env.SMTP_URL ?? "",
+  hostingerMailApiToken: process.env.HOSTINGER_MAIL_API_TOKEN ?? "",
+  activitySummaryRecipient: process.env.ACTIVITY_SUMMARY_RECIPIENT ?? "",
+  activitySummaryRunHour: parseInt(process.env.ACTIVITY_SUMMARY_RUN_HOUR ?? "8", 10),
 };
