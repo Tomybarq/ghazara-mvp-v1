@@ -10,6 +10,9 @@ Allow: /projects
 Allow: /blog
 Allow: /contact
 Allow: /request-quote
+Allow: /faq
+Allow: /terms
+Allow: /privacy
 
 # Internal utility / auth routes
 Disallow: /api/

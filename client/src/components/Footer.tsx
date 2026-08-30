@@ -11,9 +11,9 @@ export default function Footer() {
 
   return (
     <footer className="bg-card border-t border-border py-16 text-card-foreground">
-      <div className="content-wrap grid grid-cols-1 md:grid-cols-4 gap-10">
+      <div className="content-wrap grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
         {/* Brand Column */}
-        <div className="md:col-span-2 space-y-4">
+        <div className="space-y-4">
           <Link
             href="/"
             className="inline-block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-2xl"
@@ -31,22 +31,71 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Quick Links */}
+        {/* Navigation Links */}
         <div className="space-y-4">
           <h4 className="font-heading font-bold text-base text-foreground">
-            {isAr ? "روابط سريعة" : "Quick Links"}
+            {isAr ? "الاستكشاف والمسارات" : "Navigation"}
           </h4>
           <ul className="space-y-2.5 text-sm text-muted-foreground">
-            {footerNavLinks.map((item) => (
-              <li key={item.id}>
-                <Link
-                  href={item.href}
-                  className="hover:text-primary transition-colors inline-block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary rounded-sm"
-                >
-                  {item.label[lang]}
-                </Link>
-              </li>
-            ))}
+            <li>
+              <Link href="/about" className="hover:text-primary transition-colors inline-block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary rounded-sm">
+                {isAr ? "من نحن" : "About Us"}
+              </Link>
+            </li>
+            <li>
+              <Link href="/services" className="hover:text-primary transition-colors inline-block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary rounded-sm">
+                {isAr ? "الخدمات" : "Services"}
+              </Link>
+            </li>
+            <li>
+              <Link href="/products" className="hover:text-primary transition-colors inline-block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary rounded-sm">
+                {isAr ? "المنتجات والمنصات" : "Products"}
+              </Link>
+            </li>
+            <li>
+              <Link href="/projects" className="hover:text-primary transition-colors inline-block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary rounded-sm">
+                {isAr ? "المشاريع" : "Projects"}
+              </Link>
+            </li>
+            <li>
+              <Link href="/blog" className="hover:text-primary transition-colors inline-block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary rounded-sm">
+                {isAr ? "المدونة والرؤى" : "Insights & Blog"}
+              </Link>
+            </li>
+          </ul>
+        </div>
+
+        {/* Legal & Governance */}
+        <div className="space-y-4">
+          <h4 className="font-heading font-bold text-base text-foreground">
+            {isAr ? "الحوكمة والشفافية" : "Governance & Legal"}
+          </h4>
+          <ul className="space-y-2.5 text-sm text-muted-foreground">
+            <li>
+              <Link href="/request-quote" className="hover:text-primary transition-colors font-medium text-primary inline-block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary rounded-sm">
+                {isAr ? "طلب عرض سعر (RFQ)" : "Request Quote"}
+              </Link>
+            </li>
+            <li>
+              <Link href="/faq" className="hover:text-primary transition-colors inline-block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary rounded-sm">
+                {isAr ? "الأسئلة الشائعة" : "FAQ"}
+              </Link>
+            </li>
+            <li>
+              <Link href="/terms" className="hover:text-primary transition-colors inline-block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary rounded-sm">
+                {isAr ? "الشروط والأحكام" : "Terms & Conditions"}
+              </Link>
+            </li>
+            <li>
+              <Link href="/privacy" className="hover:text-primary transition-colors inline-block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary rounded-sm">
+                {isAr ? "سياسة الخصوصية" : "Privacy Policy"}
+              </Link>
+            </li>
+            <li>
+              <Link href="/hub" className="hover:text-primary transition-colors inline-block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary rounded-sm">
+                {isAr ? "بوابة الأعمال (Hub)" : "Business Hub"}
+              </Link>
+            </li>
           </ul>
         </div>
 

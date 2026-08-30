@@ -1,33 +1,62 @@
-# Vercel Deployment Notes
+# Vercel Deployment & Production Operations Guide | Ghazara V2
 
-## Purpose
+## Overview
 
-This project is a Vite SPA backed by Express and tRPC. The Vercel bridge exports the Express application from `api/index.ts`, while `vercel.json` handles the Vite build and routes API, OAuth, storage, and deep SPA paths appropriately.
+This project is a modern TypeScript stack with a Vite SPA frontend backed by Express, tRPC, and Drizzle ORM.
+On Vercel:
+- `api/index.ts` acts as the Serverless Function entry point exporting the Express application.
+- `vercel.json` coordinates client asset delivery, serverless API rewrites (`/api/*`), and deep SPA client-side routing (`/*` -> `/index.html`).
 
-## Required production configuration
+---
 
-Set every server-side value in Vercel Project Settings for both Preview and Production. Do not commit values to the repository.
+## 🌐 Custom Domain Configuration (Hostinger DNS Setup)
 
-| Variable | Purpose | Migration status |
+To point your custom domain `ghazara.net` from Hostinger to Vercel without interrupting email services:
+
+### 1. In Vercel Dashboard:
+1. Go to **Project Settings** > **Domains**.
+2. Add `ghazara.net` (recommended as canonical).
+3. Add `www.ghazara.net` (configured to redirect to `ghazara.net`).
+
+### 2. In Hostinger hPanel (DNS / Nameservers):
+Add or update the following DNS records:
+
+| Record Type | Name / Host | Points to / Value | TTL | Notes |
+| :--- | :--- | :--- | :--- | :--- |
+| **A** | `@` | `76.76.21.21` | Auto / 300 | Vercel Global Anycast IP |
+| **CNAME** | `www` | `cname.vercel-dns.com.` | Auto / 300 | Vercel Edge CNAME |
+
+> **Notice regarding Business Email (`info@ghazara.net`):**
+> Using the A/CNAME record method preserves all existing Hostinger MX and SPF/DKIM mail records intact.
+
+---
+
+## 🔑 Required Production Environment Variables
+
+Set these in your **Vercel Project Dashboard** under **Settings** > **Environment Variables**:
+
+| Variable | Description | Example / Note |
 |---|---|---|
-| `DATABASE_URL` | MySQL connection for RFQ requests and user records | A Vercel-reachable MySQL/TiDB service is required. |
-| `JWT_SECRET` | Session-cookie signing | Generate a dedicated production secret. |
-| `VITE_APP_ID` | Manus OAuth application identifier | Requires a valid callback configuration for the Vercel domain. |
-| `OAUTH_SERVER_URL` | Manus OAuth backend endpoint | Required while retaining Manus OAuth. |
-| `OWNER_OPEN_ID` | Owner role mapping | Required when admin sign-in is retained. |
-| `BUILT_IN_FORGE_API_URL` | Manus storage API endpoint | Required only while retaining Manus storage proxy. |
-| `BUILT_IN_FORGE_API_KEY` | Server-side Manus storage credential | Must be provisioned outside the source repository. |
-| `VITE_OAUTH_PORTAL_URL` | Browser OAuth entrypoint | Required if protected user flows are enabled. |
-| `VITE_FRONTEND_FORGE_API_URL` | Frontend Forge endpoint | Required only for frontend Manus integrations. |
-| `VITE_FRONTEND_FORGE_API_KEY` | Frontend Forge access credential | Assess exposure before use in public client code. |
+| `DATABASE_URL` | MySQL / TiDB cloud connection string | `mysql://user:pass@host:3306/ghazara?ssl={"rejectUnauthorized":true}` |
+| `JWT_SECRET` | Secret key used for cryptographic session signing | Secure 32+ character string |
+| `GITHUB_TOKEN` | Access token for GitHub activity dashboard widget | Fine-grained or classic token with repo read scope |
+| `NODE_ENV` | Runtime environment mode | `production` |
+| `ACTIVITY_SUMMARY_RECIPIENT` | Corporate notification recipient | `info@ghazara.net` |
 
-## Important limitation
+---
 
-The values injected by Manus for its managed runtime are not automatically available to a Vercel project. A production deployment should not be promoted until each active backend dependency has an independently managed Vercel-compatible credential and data service.
+## 🧪 Production Verification & Build Commands
 
-## Sources
+```bash
+# 1. Type-check all TypeScript code:
+pnpm check
 
-- [Vite on Vercel](https://vercel.com/docs/frameworks/frontend/vite)
-- [Express on Vercel](https://vercel.com/docs/frameworks/backend/express)
-- [Vercel Environment Variables](https://vercel.com/docs/environment-variables)
-- [Vercel Project Configuration](https://vercel.com/docs/project-configuration)
+# 2. Run automated test suite (40+ unit tests):
+pnpm test
+
+# 3. Build client and server bundles:
+pnpm build
+
+# 4. Build Vercel client bundle:
+pnpm run build:vercel
+```

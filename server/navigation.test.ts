@@ -13,6 +13,9 @@ describe("Navigation Manifest & Route Integrity", () => {
       "/blog",
       "/contact",
       "/request-quote",
+      "/faq",
+      "/terms",
+      "/privacy",
     ];
 
     requiredRoutes.forEach((route) => {

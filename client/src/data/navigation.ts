@@ -10,6 +10,9 @@ export type AppRoute =
   | "/contact"
   | "/request-quote"
   | "/hub"
+  | "/terms"
+  | "/privacy"
+  | "/faq"
   | "/404";
 
 export interface NavItem {
@@ -118,7 +121,7 @@ export const navigationItems: NavItem[] = [
       ar: "النموذج الرسمي لطلب عروض الأسعار والدراسات التجارية",
       en: "Official RFQ form for quotes and commercial assessments",
     },
-    showInHeader: false, // Featured as primary CTA button in header
+    showInHeader: false,
     showInFooter: true,
     isPrimaryCTA: true,
   },
@@ -130,6 +133,42 @@ export const navigationItems: NavItem[] = [
     description: {
       ar: "بوابة الوصول السريع للروابط والخدمات المباشرة",
       en: "Quick access portal for direct links and operations",
+    },
+    showInHeader: false,
+    showInFooter: true,
+  },
+  {
+    id: "faq",
+    href: "/faq",
+    label: { ar: "الأسئلة الشائعة", en: "FAQ" },
+    breadcrumbLabel: { ar: "الأسئلة الشائعة", en: "FAQ" },
+    description: {
+      ar: "الإجابات المعتمدة عن آليات العمل والشراكات وعروض الأسعار",
+      en: "Official answers regarding operations, partnerships, and quotes",
+    },
+    showInHeader: false,
+    showInFooter: true,
+  },
+  {
+    id: "terms",
+    href: "/terms",
+    label: { ar: "الشروط والأحكام", en: "Terms & Conditions" },
+    breadcrumbLabel: { ar: "الشروط والأحكام", en: "Terms & Conditions" },
+    description: {
+      ar: "الشروط والضوابط القانونية والتجارية للتعاملات",
+      en: "Legal terms and commercial operational conditions",
+    },
+    showInHeader: false,
+    showInFooter: true,
+  },
+  {
+    id: "privacy",
+    href: "/privacy",
+    label: { ar: "سياسة الخصوصية", en: "Privacy Policy" },
+    breadcrumbLabel: { ar: "سياسة الخصوصية", en: "Privacy Policy" },
+    description: {
+      ar: "معايير حماية وخصوصية بيانات الشركاء والعملاء",
+      en: "Data protection and privacy policies for clients and partners",
     },
     showInHeader: false,
     showInFooter: true,

@@ -142,6 +142,54 @@ export const siteSeoData: Record<string, PageMetadata> = {
     canonicalPath: "/request-quote",
     ogType: "website",
   },
+  faq: {
+    title: {
+      ar: "الأسئلة الشائعة | مؤسسة غزارة للتجارة والتسويق",
+      en: "Frequently Asked Questions | Ghazara Trading & Marketing",
+    },
+    description: {
+      ar: "إجابات معتمدة وشاملة حول خدمات التمثيل التجاري، طلبات عروض الأسعار، والحلول التقنية في غزارة.",
+      en: "Verified and comprehensive answers regarding Ghazara's commercial agency, RFQs, and tech solutions.",
+    },
+    keywords: {
+      ar: ["الأسئلة الشائعة", "استفسارات غزارة", "خدمات غزارة", "عروض الأسعار"],
+      en: ["FAQ", "Ghazara FAQ", "Commercial Services", "Quotes"],
+    },
+    canonicalPath: "/faq",
+    ogType: "website",
+  },
+  terms: {
+    title: {
+      ar: "الشروط والأحكام | مؤسسة غزارة للتجارة والتسويق",
+      en: "Terms & Conditions | Ghazara Trading & Marketing",
+    },
+    description: {
+      ar: "الشروط والضوابط القانونية والتجارية الحاكمة لخدمات وتعاملات مؤسسة غزارة للتجارة والتسويق.",
+      en: "Legal and commercial terms governing Ghazara Trading & Marketing services and transactions.",
+    },
+    keywords: {
+      ar: ["الشروط والأحكام", "الضوابط القانونية", "شروط التعامل التجاري", "غزارة"],
+      en: ["Terms & Conditions", "Legal Terms", "Commercial Terms", "Ghazara"],
+    },
+    canonicalPath: "/terms",
+    ogType: "website",
+  },
+  privacy: {
+    title: {
+      ar: "سياسة الخصوصية | مؤسسة غزارة للتجارة والتسويق",
+      en: "Privacy Policy | Ghazara Trading & Marketing",
+    },
+    description: {
+      ar: "سياسة الخصوصية وحماية بيانات العملاء والشركاء في مؤسسة غزارة للتجارة والتسويق.",
+      en: "Privacy policy and client data protection commitments at Ghazara Trading & Marketing.",
+    },
+    keywords: {
+      ar: ["سياسة الخصوصية", "حماية البيانات", "سرية المعلومات", "غزارة"],
+      en: ["Privacy Policy", "Data Protection", "Confidentiality", "Ghazara"],
+    },
+    canonicalPath: "/privacy",
+    ogType: "website",
+  },
   notFound: {
     title: {
       ar: "الصفحة غير موجودة (404) | مؤسسة غزارة",
