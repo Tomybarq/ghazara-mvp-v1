@@ -26,6 +26,7 @@ import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
 import { Button } from "./ui/button";
+import { ConfirmationDialog } from "./ui/ConfirmationDialog";
 
 const menuItems = [
   { icon: Github, label: "GitHub Activity", path: "/dashboard" },
@@ -112,6 +113,7 @@ function DashboardLayoutContent({
   const [isResizing, setIsResizing] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
   const activeMenuItem = menuItems.find(item => item.path === location);
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
   const isMobile = useIsMobile();
 
   useEffect(() => {
@@ -222,7 +224,7 @@ function DashboardLayoutContent({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
                   <DropdownMenuItem
-                    onClick={logout}
+                    onClick={() => setShowLogoutDialog(true)}
                     className="cursor-pointer text-destructive focus:text-destructive"
                   >
                     <LogOut className="mr-2 h-4 w-4" />
@@ -270,6 +272,19 @@ function DashboardLayoutContent({
         )}
         <main className="flex-1 p-4">{children}</main>
       </SidebarInset>
+
+      <ConfirmationDialog
+        open={showLogoutDialog}
+        onOpenChange={setShowLogoutDialog}
+        variant="destructive"
+        title="تأكيد تسجيل الخروج | Sign out"
+        description="هل أنت متأكد من رغبتك في تسجيل الخروج من لوحة التحكم؟"
+        confirmLabel="تسجيل الخروج"
+        cancelLabel="إلغاء"
+        onConfirm={async () => {
+          await logout();
+        }}
+      />
     </>
   );
 }

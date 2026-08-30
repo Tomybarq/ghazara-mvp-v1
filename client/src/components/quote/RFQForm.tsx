@@ -4,6 +4,7 @@ import { rfqSectors, rfqServices, rfqRegions, contactData } from "@/data/contact
 import { trpc } from "@/lib/trpc";
 import { Send, CheckCircle2, MessageCircle, Loader2, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
+import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
 
 export interface RFQFormProps {
   initialSectorId?: string;
@@ -32,6 +33,7 @@ export default function RFQForm({
   const [notes, setNotes] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [formError, setFormError] = useState("");
+  const [showConfirmSubmit, setShowConfirmSubmit] = useState(false);
 
   // Sync initial selections from URL query string if present
   useEffect(() => {
@@ -114,6 +116,10 @@ export default function RFQForm({
     }
 
     setFormError("");
+    setShowConfirmSubmit(true);
+  };
+
+  const handleConfirmSubmit = () => {
     rfqMutation.mutate({
       sector,
       service,
@@ -352,6 +358,22 @@ export default function RFQForm({
           <span>{isAr ? "إرسال مباشر عبر واتساب" : "Direct WhatsApp"}</span>
         </button>
       </div>
+
+      <ConfirmationDialog
+        open={showConfirmSubmit}
+        onOpenChange={setShowConfirmSubmit}
+        variant="info"
+        loading={rfqMutation.isPending}
+        title={isAr ? "تأكيد إرسال طلب عرض السعر" : "Confirm RFQ Submission"}
+        description={
+          isAr
+            ? `هل تود إرسال طلب عرض السعر لقطاع (${selectedSector?.label[lang] || sector}) لصالح (${companyName})؟ سيتم تسجيل الطلب في المنظومة وإتاحة إرساله عبر WhatsApp.`
+            : `Do you wish to submit the RFQ for (${selectedSector?.label[lang] || sector}) on behalf of (${companyName})? It will be logged in the system and ready for WhatsApp dispatch.`
+        }
+        confirmLabel={isAr ? "نعم، إرسال الطلب" : "Yes, Submit Request"}
+        cancelLabel={isAr ? "مراجعة البيانات" : "Review Details"}
+        onConfirm={handleConfirmSubmit}
+      />
     </form>
   );
 }
