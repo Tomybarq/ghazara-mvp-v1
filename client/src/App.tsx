@@ -26,6 +26,7 @@ const BlogPage = lazy(() => import("./pages/BlogPage"));
 const ContactPage = lazy(() => import("./pages/ContactPage"));
 const RequestQuotePage = lazy(() => import("./pages/RequestQuotePage"));
 const Hub = lazy(() => import("./pages/Hub"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 function Router() {
@@ -43,6 +44,7 @@ function Router() {
           <Route path="/contact" component={ContactPage} />
           <Route path="/request-quote" component={RequestQuotePage} />
           <Route path="/hub" component={Hub} />
+          <Route path="/dashboard" component={Dashboard} />
           <Route path="/404" component={NotFound} />
           <Route component={NotFound} />
         </Switch>
