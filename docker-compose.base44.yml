@@ -1,0 +1,51 @@
+# Base44 development compose — runs the app from the cloned source with live reload.
+# Reconstructed to match the project's own dev setup (node:22 + tsx watch, MySQL 8).
+services:
+  db:
+    image: mysql:8
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ghazara
+      MYSQL_USER: ghazara
+      MYSQL_PASSWORD: ghazara_pw
+      MYSQL_ROOT_PASSWORD: ghazara_root_pw
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-pghazara_root_pw"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    volumes:
+      - db_data:/var/lib/mysql
+
+  app:
+    image: node:22
+    working_dir: /app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+      PORT: "3000"
+      DATABASE_URL: mysql://ghazara:ghazara_pw@db:3306/ghazara
+      VITE_APP_ID: ghazara-dev
+      OAUTH_SERVER_URL: ""
+      OWNER_OPEN_ID: ""
+      BUILT_IN_FORGE_API_URL: ""
+      ACTIVITY_SUMMARY_RUN_HOUR: "8"
+      ACTIVITY_SUMMARY_RECIPIENT: info@ghazara.net
+      CHOKIDAR_USEPOLLING: "true"
+      # The public preview hostname suffix — passed through so dev servers can
+      # allow the external origin. Reference the variable, never hardcode it.
+      BASE44_PUBLIC_HOST_SUFFIX: ${BASE44_PUBLIC_HOST_SUFFIX:-local}
+    env_file:
+      - /run/base44/app.env # platform-managed secrets (GITHUB_TOKEN, ...) — LAST, always wins
+    volumes:
+      - .:/app
+    command: >
+      sh -c "corepack enable && corepack prepare pnpm@10.15.1 --activate && pnpm install && (pnpm db:push || echo 'db:push skipped') && pnpm dev"
+
+volumes:
+  db_data:

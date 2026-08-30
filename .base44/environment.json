@@ -1,0 +1,12 @@
+{
+  "previewPort": 3000,
+  "healthPath": "/",
+  "startCommand": "docker compose -f docker-compose.base44.yml up -d",
+  "secrets": [
+    {
+      "name": "GITHUB_TOKEN",
+      "description": "A GitHub Personal Access Token (classic with 'repo' scope, or fine-grained with 'Contents: read' + 'Metadata: read' on the Tomybarq/ghazara-mvp-v1 repository). Used by the /dashboard to fetch the latest commits and repository activity.",
+      "requiredAtBoot": false
+    }
+  ]
+}
