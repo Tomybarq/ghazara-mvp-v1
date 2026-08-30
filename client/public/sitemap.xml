@@ -75,10 +75,40 @@
   <!-- Contact Us -->
   <url>
     <loc>https://ghazara.net/contact</loc>
-    <lastmod>2026-08-16</lastmod>
+    <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ar" href="https://ghazara.net/contact" />
     <xhtml:link rel="alternate" hreflang="en" href="https://ghazara.net/contact?lang=en" />
+  </url>
+
+  <!-- FAQ -->
+  <url>
+    <loc>https://ghazara.net/faq</loc>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghazara.net/faq" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghazara.net/faq?lang=en" />
+  </url>
+
+  <!-- Terms & Conditions -->
+  <url>
+    <loc>https://ghazara.net/terms</loc>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghazara.net/terms" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghazara.net/terms?lang=en" />
+  </url>
+
+  <!-- Privacy Policy -->
+  <url>
+    <loc>https://ghazara.net/privacy</loc>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghazara.net/privacy" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghazara.net/privacy?lang=en" />
   </url>
 </urlset>
