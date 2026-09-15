@@ -48,16 +48,16 @@ export default function ProductsPage() {
         <section className="content-wrap py-10">
           <SiteBreadcrumb items={[{ label: isAr ? "المنتجات والمنصات" : "Products & Platforms" }]} />
 
-          <div className="max-w-3xl">
-            <span className="eyebrow inline-block mb-4">
+          <div className="max-w-3xl space-y-4">
+            <span className="eyebrow inline-block">
               {isAr ? "المنتجات والحلول الرقمية" : "Products & Digital Solutions"}
             </span>
-            <h1 className="text-4xl sm:text-5xl font-bold tracking-tight leading-tight mb-6">
+            <h1 className="text-3xl sm:text-5xl font-bold tracking-tight leading-tight">
               {isAr
                 ? "منتجات رقمية وحلول مؤسسية مصممة للتميز"
                 : "Digital Products & Enterprise Solutions Engineered for Excellence"}
             </h1>
-            <p className="text-lg text-muted-foreground leading-relaxed">
+            <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
               {isAr
                 ? "نخبة من المنصات والمنتجات التقنية التي نطورها وندعمها لخدمة قطاع الأعمال والمنظمات الإنسانية والتجارية."
                 : "A curated portfolio of technical platforms and products we develop and maintain for enterprises, commerce, and non-profits."}
@@ -98,7 +98,7 @@ export default function ProductsPage() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder={isAr ? "ابحث عن منتج أو منصة..." : "Search products & platforms..."}
                 aria-label={isAr ? "ابحث عن منتج أو منصة" : "Search products & platforms"}
-                className="w-full h-10 rounded-2xl border border-border bg-card rtl:pr-9 rtl:pl-4 ltr:pl-9 ltr:pr-4 text-xs text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary transition"
+                className="w-full h-11 rounded-2xl border border-border bg-card rtl:pr-9 rtl:pl-4 ltr:pl-9 ltr:pr-4 text-xs text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary transition"
               />
             </div>
           </div>
@@ -121,19 +121,25 @@ export default function ProductsPage() {
               {filteredProducts.map((prod) => (
                 <div
                   key={prod.id}
-                  className="bg-card border border-border rounded-3xl p-8 shadow-xs flex flex-col justify-between space-y-6 transition-all hover:border-primary/40"
+                  className="bg-card border border-border rounded-3xl p-8 shadow-xs flex flex-col justify-between space-y-6 transition-all hover:border-primary/40 hover:shadow-md"
                 >
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
                         {prod.tag[lang]}
                       </span>
-                      <span className="text-[11px] font-mono text-muted-foreground">
-                        {prod.category}
+                      <span className="text-[11px] font-mono font-bold text-emerald-600 bg-emerald-500/10 px-2.5 py-0.5 rounded-md">
+                        {prod.status === "live"
+                          ? isAr
+                            ? "متاح وجاهز"
+                            : "Live Platform"
+                          : isAr
+                          ? "حل مؤسسي"
+                          : "Enterprise Solution"}
                       </span>
                     </div>
 
-                    <h3 className="font-heading font-bold text-xl">{prod.title[lang]}</h3>
+                    <h3 className="font-heading font-bold text-xl text-foreground">{prod.title[lang]}</h3>
                     <p className="text-sm text-muted-foreground leading-relaxed">
                       {prod.shortDesc[lang]}
                     </p>
@@ -161,7 +167,7 @@ export default function ProductsPage() {
                         rel="noreferrer"
                         className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:underline"
                       >
-                        <span>{isAr ? "استعراض المنصة" : "View Platform"}</span>
+                        <span>{isAr ? "المستودع البرمجي" : "View Repository"}</span>
                         <ExternalLink className="w-4 h-4" />
                       </a>
                     ) : (
@@ -185,3 +191,4 @@ export default function ProductsPage() {
     </div>
   );
 }
+
