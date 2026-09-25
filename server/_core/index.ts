@@ -4,45 +4,45 @@ import net from "net";
 import { serveStatic, setupVite } from "./vite";
 import { createApp } from "../app";
 
-function isPortAvailable(port: number): Promise<boolean> {
-  return new Promise(resolve => {
-    const server = net.createServer();
-    server.listen(port, () => {
-      server.close(() => resolve(true));
-    });
-    server.on("error", () => resolve(false));
-  });
-}
-
-async function findAvailablePort(startPort: number = 3000): Promise<number> {
-  for (let port = startPort; port < startPort + 20; port++) {
-    if (await isPortAvailable(port)) {
-      return port;
-    }
-  }
-  throw new Error(`No available port found starting from ${startPort}`);
-}
-
 async function startServer() {
+  console.log("[Server] Initializing Express & tRPC application...");
   const app = createApp();
   const server = createServer(app);
-  // development mode uses Vite, production mode uses static files
+
   if (process.env.NODE_ENV === "development") {
+    console.log("[Server] Setting up Vite dev middleware...");
     await setupVite(app, server);
+    console.log("[Server] Vite dev middleware ready.");
   } else {
     serveStatic(app);
   }
 
-  const preferredPort = parseInt(process.env.PORT || "3000");
-  const port = await findAvailablePort(preferredPort);
+  const startPort = parseInt(process.env.PORT || "3000", 10);
+  let currentPort = startPort;
+  const maxPort = startPort + 20;
 
-  if (port !== preferredPort) {
-    console.log(`Port ${preferredPort} is busy, using port ${port} instead`);
+  function tryListen(port: number) {
+    server.once("error", (err: NodeJS.ErrnoException) => {
+      if (err.code === "EADDRINUSE") {
+        console.log(`[Server] Port ${port} is busy, trying port ${port + 1}...`);
+        if (port < maxPort) {
+          tryListen(port + 1);
+        } else {
+          console.error(`[Server] No available ports between ${startPort} and ${maxPort}`);
+        }
+      } else {
+        console.error("[Server] Server error:", err);
+      }
+    });
+
+    server.listen(port, "0.0.0.0", () => {
+      console.log(`[Server] Ghazara app running at http://localhost:${port}/`);
+    });
   }
 
-  server.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}/`);
-  });
+  tryListen(currentPort);
 }
 
-startServer().catch(console.error);
+startServer().catch((err) => {
+  console.error("[Server] Fatal error during startup:", err);
+});

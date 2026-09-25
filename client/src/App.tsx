@@ -56,7 +56,7 @@ export default function App() {
   return (
     <ErrorBoundary>
       <LanguageProvider>
-        <ThemeProvider defaultTheme="dark" switchable>
+        <ThemeProvider defaultTheme="light" switchable={false}>
           <TooltipProvider>
             <Toaster />
             <Router />

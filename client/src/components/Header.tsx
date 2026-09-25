@@ -1,176 +1,136 @@
-import { useState, useEffect } from "react";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { headerNavLinks } from "@/data/navigation";
+import React, { useState, useEffect } from "react";
+import { useLanguage } from "../contexts/LanguageContext";
+import { siteContent } from "../data/siteContent";
+import { Logo } from "./ui/Logo";
 import { Globe, Menu, X, ArrowUpRight } from "lucide-react";
-import { Logo } from "@/components/ui/Logo";
-import { Link, useLocation } from "wouter";
 
-export default function Header() {
-  const { lang, toggleLanguage, isAr } = useLanguage();
-  const [location] = useLocation();
+export const Header: React.FC = () => {
+  const { lang, toggleLanguage, dir, isAr } = useLanguage();
+  const content = siteContent[lang];
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 15);
+      setIsScrolled(window.scrollY > 20);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close mobile menu on route change
-  useEffect(() => {
-    setMobileMenuOpen(false);
-  }, [location]);
+  const navLinks = [
+    { label: content.header.nav.services, href: "#services" },
+    { label: content.header.nav.about, href: "#about" },
+    { label: content.header.nav.whyGhazara, href: "#why-ghazara" },
+    { label: content.header.nav.contact, href: "#contact" },
+  ];
 
-  // Handle ESC key to close mobile menu
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && mobileMenuOpen) {
-        setMobileMenuOpen(false);
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [mobileMenuOpen]);
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    setMobileMenuOpen(false);
+    const target = document.querySelector(href);
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   return (
     <header
-      className={`fixed top-0 right-0 left-0 z-50 transition-all duration-300 ${
+      className={`sticky top-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? "bg-background/95 backdrop-blur-md border-b border-border shadow-xs py-3"
+          ? "bg-[#FFF7ED]/90 backdrop-blur-md border-b border-[#27272A]/8 shadow-xs py-3"
           : "bg-transparent py-4 sm:py-5"
       }`}
     >
-      <div className="content-wrap flex items-center justify-between">
-        {/* Brand Logo with Link to Home */}
-        <Link
-          href="/"
-          className="flex items-center gap-3 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-2xl transition-transform hover:scale-[1.01]"
-          aria-label={isAr ? "الرئيسية - مؤسسة غزارة للتجارة والتسويق" : "Home - Ghazara Trading & Marketing"}
-        >
-          <Logo variant="header" size="header" priority />
-        </Link>
+      <div className="editorial-container">
+        <div className="flex items-center justify-between gap-4">
+          {/* Brand Logo with White Chip */}
+          <a
+            href="#hero"
+            onClick={(e) => handleNavClick(e, "#hero")}
+            className="flex items-center gap-2 group transition-transform focus:outline-hidden focus:ring-2 focus:ring-[#F97316]/50 rounded-2xl"
+            aria-label={content.footer.companyName}
+          >
+            <Logo variant="header" size="sm" />
+          </a>
 
-        {/* Desktop Navigation */}
-        <nav
-          aria-label={isAr ? "التنقل الرئيسي" : "Main Navigation"}
-          className="hidden lg:flex items-center gap-7"
-        >
-          {headerNavLinks.map((item) => {
-            const isActive = location === item.href;
-            return (
-              <Link
-                key={item.id}
-                href={item.href}
-                aria-current={isActive ? "page" : undefined}
-                className={`text-sm font-medium transition-colors hover:text-primary ${
-                  isActive
-                    ? "text-primary font-bold border-b-2 border-primary pb-0.5"
-                    : "text-muted-foreground"
-                }`}
+          {/* Center Navigation (Desktop) */}
+          <nav className="hidden md:flex items-center gap-6 lg:gap-8" aria-label="Main Navigation">
+            {navLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                onClick={(e) => handleNavClick(e, link.href)}
+                className="text-sm font-medium text-[#52525B] hover:text-[#F97316] transition-colors duration-180"
               >
-                {item.label[lang]}
-              </Link>
-            );
-          })}
-        </nav>
+                {link.label}
+              </a>
+            ))}
+          </nav>
 
-        {/* Desktop Actions & Language Switcher */}
-        <div className="hidden md:flex items-center gap-3.5">
-          <button
-            type="button"
-            onClick={toggleLanguage}
-            className="flex items-center gap-1.5 text-xs font-heading font-semibold px-3.5 py-2 rounded-full border border-border hover:border-primary/50 transition-colors bg-card text-card-foreground shadow-xs cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-            title={isAr ? "Switch to English" : "التبديل إلى العربية"}
-            aria-label={isAr ? "Switch to English language" : "التبديل إلى اللغة العربية"}
-          >
-            <Globe className="w-3.5 h-3.5 text-primary" />
-            <span>{isAr ? "English" : "العربية"}</span>
-          </button>
-
-          <Link
-            href="/request-quote"
-            className="route-button route-button-primary px-5 py-2.5 text-xs font-heading font-bold flex items-center gap-1.5 shadow-sm hover:shadow-md transition"
-          >
-            <span>{isAr ? "اطلب عرضًا" : "Request Quote"}</span>
-            <ArrowUpRight className={`w-3.5 h-3.5 ${isAr ? "rotate-[-90deg]" : ""}`} />
-          </Link>
-        </div>
-
-        {/* Mobile Menu Button & Quick Lang Toggle */}
-        <div className="flex lg:hidden items-center gap-2.5">
-          <button
-            type="button"
-            onClick={toggleLanguage}
-            className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-full border border-border bg-card shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-            aria-label={isAr ? "Switch language to English" : "تغيير اللغة إلى العربية"}
-          >
-            <Globe className="w-3.5 h-3.5 text-primary" />
-            <span>{isAr ? "EN" : "عربي"}</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 rounded-xl bg-card border border-border text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-            aria-label={isAr ? "تبديل القائمة" : "Toggle Menu"}
-            aria-expanded={mobileMenuOpen}
-            aria-controls="mobile-nav-menu"
-          >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5 text-primary" />}
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile Drawer Menu */}
-      {mobileMenuOpen && (
-        <div
-          id="mobile-nav-menu"
-          className="absolute top-full right-0 left-0 bg-card/98 backdrop-blur-2xl border-b border-border shadow-2xl lg:hidden p-6 flex flex-col gap-4 animate-in fade-in slide-in-from-top-3 z-50"
-        >
-          {/* Mobile Header Branding */}
-          <div className="pb-3 border-b border-border/60 flex items-center justify-between">
-            <Logo variant="header" size="sm" priority />
-            <span className="text-[10px] font-mono text-muted-foreground uppercase font-bold tracking-wider">
-              {isAr ? "القائمة الرئيسية" : "Main Menu"}
-            </span>
-          </div>
-
-          <div className="flex flex-col gap-1">
-            {headerNavLinks.map((item) => {
-              const isActive = location === item.href;
-              return (
-                <Link
-                  key={item.id}
-                  href={item.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  aria-current={isActive ? "page" : undefined}
-                  className={`text-base font-medium py-2.5 px-2 rounded-xl transition-colors ${
-                    isActive
-                      ? "text-primary font-bold bg-primary/5"
-                      : "text-foreground hover:text-primary hover:bg-muted/50"
-                  }`}
-                >
-                  {item.label[lang]}
-                </Link>
-              );
-            })}
-          </div>
-
-          <div className="pt-2">
-            <Link
-              href="/request-quote"
-              onClick={() => setMobileMenuOpen(false)}
-              className="route-button route-button-primary w-full py-3.5 text-sm font-bold flex items-center justify-center gap-2 shadow-md"
+          {/* Right Actions: Language Switcher + CTA Button */}
+          <div className="flex items-center gap-3">
+            {/* Language Switcher */}
+            <button
+              onClick={toggleLanguage}
+              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-[#27272A]/10 text-[#27272A] hover:border-[#F97316] hover:text-[#F97316] transition-all shadow-2xs"
+              aria-label={isAr ? "Switch to English" : "التحويل إلى اللغة العربية"}
             >
-              <span>{isAr ? "اطلب عرضًا تجارياً" : "Request a Quote"}</span>
-              <ArrowUpRight className={`w-4 h-4 ${isAr ? "rotate-[-90deg]" : ""}`} />
-            </Link>
+              <Globe className="w-3.5 h-3.5 text-[#F97316]" />
+              <span>{isAr ? "EN" : "العربية"}</span>
+            </button>
+
+            {/* Primary CTA (Desktop) */}
+            <a
+              href="#contact"
+              onClick={(e) => handleNavClick(e, "#contact")}
+              className="hidden sm:inline-flex btn-primary text-xs sm:text-sm py-2 px-4.5"
+            >
+              <span>{content.header.cta}</span>
+              <ArrowUpRight className={`w-3.5 h-3.5 transition-transform ${dir === "rtl" ? "rotate-[-90deg]" : ""}`} />
+            </a>
+
+            {/* Mobile Menu Trigger */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-2 rounded-xl text-[#27272A] bg-white border border-[#27272A]/10 hover:border-[#F97316] transition-colors"
+              aria-expanded={mobileMenuOpen}
+              aria-label="Toggle Navigation Menu"
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
           </div>
         </div>
-      )}
+
+        {/* Mobile Navigation Drawer */}
+        {mobileMenuOpen && (
+          <div className="md:hidden mt-3 p-4 bg-white border border-[#27272A]/10 rounded-2xl shadow-xl space-y-3 animate-in fade-in-50 slide-in-from-top-3 duration-200">
+            <nav className="flex flex-col space-y-2">
+              {navLinks.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  onClick={(e) => handleNavClick(e, link.href)}
+                  className="px-3 py-2 text-sm font-medium text-[#27272A] hover:bg-[#FFF7ED] hover:text-[#F97316] rounded-xl transition-colors"
+                >
+                  {link.label}
+                </a>
+              ))}
+            </nav>
+            <div className="pt-2 border-t border-[#27272A]/6">
+              <a
+                href="#contact"
+                onClick={(e) => handleNavClick(e, "#contact")}
+                className="w-full btn-primary text-sm py-2.5 justify-center"
+              >
+                <span>{content.header.cta}</span>
+              </a>
+            </div>
+          </div>
+        )}
+      </div>
     </header>
   );
-}
+};
+
+export default Header;
