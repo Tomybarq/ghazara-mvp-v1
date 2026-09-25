@@ -25,6 +25,8 @@ const ProjectsPage = lazy(() => import("./pages/ProjectsPage"));
 const BlogPage = lazy(() => import("./pages/BlogPage"));
 const ContactPage = lazy(() => import("./pages/ContactPage"));
 const RequestQuotePage = lazy(() => import("./pages/RequestQuotePage"));
+const PrivacyPage = lazy(() => import("./pages/PrivacyPage"));
+const TermsPage = lazy(() => import("./pages/TermsPage"));
 const Hub = lazy(() => import("./pages/Hub"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
@@ -35,6 +37,8 @@ function Router() {
       <Suspense fallback={<PageLoader />}>
         <Switch>
           <Route path="/" component={Home} />
+          <Route path="/privacy" component={PrivacyPage} />
+          <Route path="/terms" component={TermsPage} />
           <Route path="/about" component={AboutPage} />
           <Route path="/services" component={ServicesPage} />
           <Route path="/products" component={ProductsPage} />

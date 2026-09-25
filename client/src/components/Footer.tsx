@@ -55,6 +55,18 @@ export const Footer: React.FC = () => {
             >
               {content.footer.links.contact}
             </a>
+            <a
+              href="/privacy"
+              className="hover:text-[#F97316] transition-colors"
+            >
+              {content.footer.links.privacy}
+            </a>
+            <a
+              href="/terms"
+              className="hover:text-[#F97316] transition-colors"
+            >
+              {content.footer.links.terms}
+            </a>
           </nav>
         </div>
 

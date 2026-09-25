@@ -1,5 +1,10 @@
 export type Language = "ar" | "en";
 
+export interface LegalSection {
+  title: string;
+  paragraphs: string[];
+}
+
 export interface SiteContent {
   meta: {
     title: string;
@@ -110,6 +115,33 @@ export interface SiteContent {
     whatsappNotice: string;
     whatsappCta: string;
   };
+  privacy: {
+    title: string;
+    lastUpdated: string;
+    intro: string;
+    sections: LegalSection[];
+    googleCompliance: {
+      title: string;
+      text: string;
+    };
+    contactInfo: {
+      title: string;
+      email: string;
+      secondaryEmail: string;
+      domain: string;
+    };
+  };
+  terms: {
+    title: string;
+    lastUpdated: string;
+    intro: string;
+    sections: LegalSection[];
+    contactInfo: {
+      title: string;
+      email: string;
+      domain: string;
+    };
+  };
   footer: {
     companyName: string;
     tagline: string;
@@ -119,6 +151,7 @@ export interface SiteContent {
       about: string;
       contact: string;
       privacy: string;
+      terms: string;
     };
     copyright: string;
   };
@@ -291,6 +324,86 @@ export const siteContent: Record<Language, SiteContent> = {
       whatsappNotice: "هل تفضل التواصل السريع المباشر؟",
       whatsappCta: "تحدث معنا عبر واتساب",
     },
+    privacy: {
+      title: "سياسة الخصوصية وحماية البيانات",
+      lastUpdated: "آخر تحديث: سبتمبر 2026",
+      intro: "تلتزم مؤسسة غزارة للتجارة والتسويق (Ghazara) بحماية خصوصية زوار موقعنا وعملائنا وشركائنا التجاريين وفقاً للأنظمة واللوائح المعتمدة بما فيها نظام حماية البيانات الشخصية (PDPL) وسياسات بيانات المستخدم لمنصات التحقق المعتمدة.",
+      sections: [
+        {
+          title: "1. البيانات التي نجمعها",
+          paragraphs: [
+            "نجمع البيانات التي تقدمها لنا طواعية عند ملء نماذج الاستفسار وطلب عروض الأسعار، وتتضمن: الاسم، اسم الشركة، البريد الإلكتروني للعمل، ورقم الهاتف، وتفاصيل المتطلبات التجارية.",
+            "عند تسجيل الدخول أو المصادقة عبر موفري الهوية المعتمدين (مثل Google OAuth)، نتلقى فقط البيانات الأساسية المصرح بها (المعرف الفريد، الاسم الكامل، وعنوان البريد الإلكتروني الموثق) لإنشاء الجلسة وتوثيق هوية المستخدم.",
+          ],
+        },
+        {
+          title: "2. كيف نستخدم بياناتك",
+          paragraphs: [
+            "تستخدم البيانات حصراً للتواصل معك بشأن الخدمات التجارية، وإعداد عروض الأسعار المخصصة، وتقديم الاستشارات المطلوبة، وإدارة الشراكات التجارية.",
+            "لا نقوم إطلاقاً ببيع أو تأجير أو مشاركة بياناتك الشخصية مع أي أطراف ثالثة لأغراض دعائية أو تجارية خارجية.",
+          ],
+        },
+        {
+          title: "3. أمن البيانات والاحتفاظ بها",
+          paragraphs: [
+            "نطبق معايير أمنية تقنية وتنظيمية متقدمة لحماية البيانات ضد الوصول غير المصرح به أو التعديل أو الإفصاح.",
+            "نحتفظ بالبيانات فقط للفترة اللازمة لتحقيق الأغراض التجارية الموضحة أو وفقاً لما يفرضه القانون التجاري والأنظمة السارية.",
+          ],
+        },
+        {
+          title: "4. حقوقك وخياراتك",
+          paragraphs: [
+            "يحق لك في أي وقت طلب الوصول إلى بياناتك الشخصية، أو تصحيحها، أو طلب حذفها من سجلاتنا بالتواصل المباشر مع فريق حماية البيانات عبر البريد الرسمي info@ghazara.net.",
+          ],
+        },
+      ],
+      googleCompliance: {
+        title: "الامتثال لسياسة بيانات مستخدمي خدمات Google API",
+        text: "إن استخدام غزارة للمعلومات المستلمة من واجهات برمجة تطبيقات Google ونقلها إلى أي تطبيق آخر يتوافق بدقة مع سياسة بيانات مستخدمي خدمات Google API، بما في ذلك متطلبات الاستخدام المحدود (Limited Use Requirements).",
+      },
+      contactInfo: {
+        title: "بيانات التواصل والاستفسارات القانونية",
+        email: "info@ghazara.net",
+        secondaryEmail: "ghazaranet@gmail.com",
+        domain: "https://ghazara.net",
+      },
+    },
+    terms: {
+      title: "الشروط والأحكام العامة",
+      lastUpdated: "آخر تحديث: سبتمبر 2026",
+      intro: "أهلاً بك في موقع مؤسسة غزارة للتجارة والتسويق (ghazara.net). استخدامك لهذا الموقع أو أي من خدماتنا الاستشارية والتجارية يشكل موافقتك الكاملة على هذه الشروط والأحكام.",
+      sections: [
+        {
+          title: "1. نطاق الخدمات والتمثيل التجاري",
+          paragraphs: [
+            "تقدم غزارة خدمات التجارة، وتطوير الأسواق، والتسويق عالي الأداء، وتطوير الأعمال للشركات والجهات التجارية. تخضع عروض الأسعار والاتفاقيات التجارية لعقود مستقلة تفصيلية يتم توقيعها بين الطرفين.",
+          ],
+        },
+        {
+          title: "2. حقوق الملكية الفكرية",
+          paragraphs: [
+            "كافة محتويات الموقع بما في ذلك العلامة التجارية لـ 'غزارة'، والشعارات، والنصوص، والتصاميم، والأيقونات، والنظم البرمجية هي ملكية حصرية لمؤسسة غزارة للتجارة والتسويق ومحمية بموجب أنظمة حماية الملكية الفكرية.",
+          ],
+        },
+        {
+          title: "3. الاستخدام المقبول للموقع",
+          paragraphs: [
+            "يلتزم المستخدم بعدم استخدام الموقع لأي أغراض غير مشروعة، أو محاولة تعطيل الخوادم، أو اختراق الإجراءات الأمنية، أو إرسال استفسارات احتيالية.",
+          ],
+        },
+        {
+          title: "4. حدود المسؤولية والقانون الساري",
+          paragraphs: [
+            "تسعى غزارة لتوفير أدق المعلومات حول خدماتها ولكنها لا تقدم ضمانات صريحة أو ضمنية تتجاوز الشروط المنصوص عليها في العقود التجارية التنفيذية الموقعة. تخضع هذه الشروط وتفسر وفقاً للأنظمة التجارية السارية في المملكة العربية السعودية.",
+          ],
+        },
+      ],
+      contactInfo: {
+        title: "للاستفسارات الرسمية حول الشروط والأحكام",
+        email: "info@ghazara.net",
+        domain: "https://ghazara.net",
+      },
+    },
     footer: {
       companyName: "غزارة للتجارة والتسويق",
       tagline: "شريكك الاستراتيجي في تنمية الأعمال وبناء الأسواق الواعدة.",
@@ -300,6 +413,7 @@ export const siteContent: Record<Language, SiteContent> = {
         about: "عن غزارة",
         contact: "تواصل معنا",
         privacy: "سياسة الخصوصية",
+        terms: "الشروط والأحكام",
       },
       copyright: "© 2026 غزارة للتجارة والتسويق. جميع الحقوق محفوظة.",
     },
@@ -470,6 +584,86 @@ export const siteContent: Record<Language, SiteContent> = {
       whatsappNotice: "Prefer direct and instant messaging?",
       whatsappCta: "Message us on WhatsApp",
     },
+    privacy: {
+      title: "Privacy Policy & Data Protection",
+      lastUpdated: "Last Updated: September 2026",
+      intro: "Ghazara for Trading & Marketing ('Ghazara', 'we', 'our') is committed to protecting the privacy and security of visitors to https://ghazara.net and our business partners in compliance with applicable regulations, including Saudi Personal Data Protection Law (PDPL) and Google API Services User Data Policy.",
+      sections: [
+        {
+          title: "1. Information We Collect",
+          paragraphs: [
+            "We collect information that you voluntarily submit through our contact and quote request forms, including your full name, company name, corporate email address, phone number, and commercial project requirements.",
+            "When authenticating via authorized identity providers (such as Google OAuth), we only receive verified basic profile details (user openId, full name, and verified email address) solely for authentication and session management.",
+          ],
+        },
+        {
+          title: "2. How We Use Your Information",
+          paragraphs: [
+            "Your information is utilized strictly to communicate regarding trading and marketing services, prepare customized commercial proposals, provide requested advisory, and manage business partnerships.",
+            "We never sell, rent, or trade your personal data to third parties for commercial advertising or external monetization.",
+          ],
+        },
+        {
+          title: "3. Data Security & Retention",
+          paragraphs: [
+            "We enforce robust technical, administrative, and physical safeguards to prevent unauthorized access, disclosure, or alteration of collected information.",
+            "Data is retained only as long as necessary to fulfill commercial obligations or as mandated by statutory compliance regulations.",
+          ],
+        },
+        {
+          title: "4. User Rights & Data Subject Access",
+          paragraphs: [
+            "You have the right to request access to, correction of, or deletion of your personal data at any time by contacting our data protection team at info@ghazara.net.",
+          ],
+        },
+      ],
+      googleCompliance: {
+        title: "Google API Services User Data Policy Compliance",
+        text: "Ghazara's use and transfer to any other app of information received from Google APIs will adhere to Google API Services User Data Policy, including the Limited Use requirements.",
+      },
+      contactInfo: {
+        title: "Privacy Inquiries & Legal Contact",
+        email: "info@ghazara.net",
+        secondaryEmail: "ghazaranet@gmail.com",
+        domain: "https://ghazara.net",
+      },
+    },
+    terms: {
+      title: "Terms of Service & Public Usage",
+      lastUpdated: "Last Updated: September 2026",
+      intro: "Welcome to Ghazara for Trading & Marketing (ghazara.net). By accessing our website or engaging with our commercial and marketing solutions, you agree to comply with and be bound by the following terms and conditions.",
+      sections: [
+        {
+          title: "1. Scope of Commercial Services",
+          paragraphs: [
+            "Ghazara provides trading representation, market development, high-performance marketing, and business development services. Formal engagements and deliverables are governed by specific bilateral commercial agreements.",
+          ],
+        },
+        {
+          title: "2. Intellectual Property Rights",
+          paragraphs: [
+            "All website materials, trademarks, brand identity assets, logos, copy, UI architecture, and technical assets are the exclusive intellectual property of Ghazara for Trading & Marketing and are protected under international copyright and trademark laws.",
+          ],
+        },
+        {
+          title: "3. Acceptable Use",
+          paragraphs: [
+            "Users agree not to misuse the website, attempt unauthorized access to infrastructure, disrupt network availability, or transmit fraudulent inquiries.",
+          ],
+        },
+        {
+          title: "4. Limitation of Liability & Governing Law",
+          paragraphs: [
+            "Ghazara strives for accuracy across all published insights but makes no warranties beyond those codified in executed client contracts. These terms are governed by and construed in accordance with the laws of the Kingdom of Saudi Arabia.",
+          ],
+        },
+      ],
+      contactInfo: {
+        title: "Official Inquiries Regarding Terms",
+        email: "info@ghazara.net",
+        domain: "https://ghazara.net",
+      },
+    },
     footer: {
       companyName: "Ghazara for Trading & Marketing",
       tagline: "Your strategic partner in commercial acceleration and high-impact market growth.",
@@ -479,6 +673,7 @@ export const siteContent: Record<Language, SiteContent> = {
         about: "About",
         contact: "Contact",
         privacy: "Privacy Policy",
+        terms: "Terms of Service",
       },
       copyright: "© 2026 Ghazara for Trading & Marketing. All rights reserved.",
     },

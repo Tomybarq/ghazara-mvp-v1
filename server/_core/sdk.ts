@@ -29,23 +29,59 @@ const GET_USER_INFO_PATH = `/webdev.v1.WebDevAuthPublicService/GetUserInfo`;
 const GET_USER_INFO_WITH_JWT_PATH = `/webdev.v1.WebDevAuthPublicService/GetUserInfoWithJwt`;
 
 class OAuthService {
+  private isGoogleOAuth: boolean;
+
   constructor(private client: ReturnType<typeof axios.create>) {
-    console.log("[OAuth] Initialized with baseURL:", ENV.oAuthServerUrl);
-    if (!ENV.oAuthServerUrl) {
-      console.error(
-        "[OAuth] ERROR: OAUTH_SERVER_URL is not configured! Set OAUTH_SERVER_URL environment variable."
-      );
-    }
+    const serverUrl = ENV.oAuthServerUrl || "https://accounts.google.com";
+    this.isGoogleOAuth = serverUrl.includes("google.com") || Boolean(process.env.GOOGLE_CLIENT_ID);
+    console.log("[OAuth] Initialized for provider:", this.isGoogleOAuth ? "Google Cloud Console OAuth 2.0" : serverUrl);
   }
 
   private decodeState(state: string): string {
-    return decodeOAuthState(state).redirectUri;
+    try {
+      return decodeOAuthState(state).redirectUri;
+    } catch {
+      return "https://ghazara.net/api/oauth/callback";
+    }
   }
 
   async getTokenByCode(
     code: string,
     state: string
   ): Promise<ExchangeTokenResponse> {
+    if (this.isGoogleOAuth && (process.env.GOOGLE_CLIENT_SECRET || process.env.GOOGLE_CLIENT_ID)) {
+      const clientId = process.env.GOOGLE_CLIENT_ID || ENV.appId;
+      const clientSecret = process.env.GOOGLE_CLIENT_SECRET || "";
+      const redirectUri = this.decodeState(state);
+
+      const params = new URLSearchParams();
+      params.append("client_id", clientId);
+      params.append("client_secret", clientSecret);
+      params.append("code", code);
+      params.append("grant_type", "authorization_code");
+      params.append("redirect_uri", redirectUri);
+
+      const { data } = await axios.post<{
+        access_token: string;
+        id_token?: string;
+        token_type: string;
+        expires_in: number;
+        refresh_token?: string;
+      }>("https://oauth2.googleapis.com/token", params.toString(), {
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        timeout: AXIOS_TIMEOUT_MS,
+      });
+
+      return {
+        accessToken: data.access_token,
+        tokenType: data.token_type || "Bearer",
+        expiresIn: data.expires_in || 3600,
+        refreshToken: data.refresh_token || "",
+        scope: "openid email profile",
+        idToken: data.id_token || "",
+      };
+    }
+
     const payload: ExchangeTokenRequest = {
       clientId: ENV.appId,
       grantType: "authorization_code",
@@ -64,6 +100,27 @@ class OAuthService {
   async getUserInfoByToken(
     token: ExchangeTokenResponse
   ): Promise<GetUserInfoResponse> {
+    if (this.isGoogleOAuth) {
+      const { data } = await axios.get<{
+        sub: string;
+        name?: string;
+        email?: string;
+        picture?: string;
+        email_verified?: boolean;
+      }>("https://www.googleapis.com/oauth2/v3/userinfo", {
+        headers: { Authorization: `Bearer ${token.accessToken}` },
+        timeout: AXIOS_TIMEOUT_MS,
+      });
+
+      return {
+        openId: data.sub,
+        name: data.name || "Ghazara Member",
+        email: data.email || null,
+        platform: "google",
+        loginMethod: "google",
+      } as unknown as GetUserInfoResponse;
+    }
+
     const { data } = await this.client.post<GetUserInfoResponse>(
       GET_USER_INFO_PATH,
       {
@@ -77,7 +134,7 @@ class OAuthService {
 
 const createOAuthHttpClient = (): AxiosInstance =>
   axios.create({
-    baseURL: ENV.oAuthServerUrl,
+    baseURL: ENV.oAuthServerUrl || "https://accounts.google.com",
     timeout: AXIOS_TIMEOUT_MS,
   });
 
