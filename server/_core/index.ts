@@ -11,7 +11,8 @@ async function startServer() {
 
   if (process.env.NODE_ENV === "development") {
     console.log("[Server] Setting up Vite dev middleware...");
-    const { setupVite } = await import("./vite");
+    const viteModule = "./vite.ts";
+    const { setupVite } = await import(viteModule);
     await setupVite(app, server);
     console.log("[Server] Vite dev middleware ready.");
   } else {
