@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { createServer } from "http";
 import net from "net";
-import { serveStatic, setupVite } from "./vite";
+import { serveStatic } from "./static";
 import { createApp } from "../app";
 
 async function startServer() {
@@ -11,6 +11,7 @@ async function startServer() {
 
   if (process.env.NODE_ENV === "development") {
     console.log("[Server] Setting up Vite dev middleware...");
+    const { setupVite } = await import("./vite");
     await setupVite(app, server);
     console.log("[Server] Vite dev middleware ready.");
   } else {
