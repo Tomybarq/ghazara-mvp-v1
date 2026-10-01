@@ -10,8 +10,9 @@ WORKDIR /app
 # Install pnpm
 RUN corepack enable && corepack prepare pnpm@10.15.1 --activate
 
-# Copy dependency specifications
+# Copy dependency specifications and patches
 COPY package.json pnpm-lock.yaml ./
+COPY patches ./patches
 
 # Install all dependencies (including devDependencies needed for build)
 RUN pnpm install --frozen-lockfile
@@ -33,8 +34,9 @@ ENV PORT=8080
 # Install pnpm for production runner
 RUN corepack enable && corepack prepare pnpm@10.15.1 --activate
 
-# Copy package definition
+# Copy package definition and patches
 COPY package.json pnpm-lock.yaml ./
+COPY patches ./patches
 
 # Install ONLY production dependencies
 RUN pnpm install --prod --frozen-lockfile
