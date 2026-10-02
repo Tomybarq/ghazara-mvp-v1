@@ -40,9 +40,27 @@ async function startServer() {
     console.log(`Port ${preferredPort} is busy, using port ${port} instead`);
   }
 
-  server.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}/`);
+  const host = "0.0.0.0";
+  server.listen(port, host, () => {
+    console.log(`Server running on http://${host}:${port}/ (NODE_ENV: ${process.env.NODE_ENV || "development"})`);
   });
+
+  // Graceful shutdown handling for Google Cloud Run and container lifecycle
+  const gracefulShutdown = (signal: string) => {
+    console.log(`${signal} signal received: closing HTTP server gracefully`);
+    server.close(() => {
+      console.log("HTTP server closed");
+      process.exit(0);
+    });
+    // Force shutdown if connections do not close within 10s
+    setTimeout(() => {
+      console.error("Forcing shutdown after timeout");
+      process.exit(1);
+    }, 10000).unref();
+  };
+
+  process.on("SIGTERM", () => gracefulShutdown("SIGTERM"));
+  process.on("SIGINT", () => gracefulShutdown("SIGINT"));
 }
 
 startServer().catch(console.error);

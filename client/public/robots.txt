@@ -17,5 +17,6 @@ Allow: /privacy
 # Internal utility / auth routes
 Disallow: /api/
 Disallow: /hub
+Disallow: /dashboard
 
 Sitemap: https://ghazara.net/sitemap.xml

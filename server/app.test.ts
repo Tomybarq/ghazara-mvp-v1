@@ -32,4 +32,15 @@ describe("Vercel Express bridge", () => {
     const storageResponse = await request("/manus-storage/health-check");
     expect(storageResponse.status).not.toBe(404);
   });
+
+  it("serves cloud-run health endpoints with 200 OK", async () => {
+    const healthResponse = await request("/health");
+    expect(healthResponse.status).toBe(200);
+    const healthData = await healthResponse.json();
+    expect(healthData.status).toBe("ok");
+    expect(healthData.service).toBe("ghazara-website");
+
+    const apiHealthResponse = await request("/api/health");
+    expect(apiHealthResponse.status).toBe(200);
+  });
 });

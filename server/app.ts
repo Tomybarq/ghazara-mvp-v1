@@ -14,6 +14,16 @@ export function createApp(): Express {
 
   app.use(express.json({ limit: "50mb" }));
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
+  // Health check endpoints for Google Cloud Run, load balancers, and monitoring
+  app.get(["/health", "/api/health"], (_req, res) => {
+    res.status(200).json({
+      status: "ok",
+      service: "ghazara-website",
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+    });
+  });
+
   registerStorageProxy(app);
   registerOAuthRoutes(app);
   app.use(

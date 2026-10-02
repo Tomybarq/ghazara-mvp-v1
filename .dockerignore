@@ -1,0 +1,41 @@
+# Node & Package Managers
+node_modules
+.pnpm-store
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build and runtime outputs
+dist
+build
+.next
+.nuxt
+.cache
+.turbo
+
+# Environment and sensitive secrets
+.env
+.env.local
+.env.*.local
+.base44/app.env
+
+# Git & VCS
+.git
+.gitignore
+.github
+
+# Testing and Coverage
+coverage
+.nyc_output
+
+# Temporary and scratch documentation
+*.zip
+*.tar.gz
+MANUS_REPORT.md
+todo-*.md
+Ghazara_*.md
+V2_*.md
+Master Project Instructions*.md
+.DS_Store
+Thumbs.db
