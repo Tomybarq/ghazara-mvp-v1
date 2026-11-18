@@ -20,6 +20,7 @@ import Home from "./pages/Home";
 // Lazy load secondary routes for optimal initial bundle performance
 const AboutPage = lazy(() => import("./pages/AboutPage"));
 const ServicesPage = lazy(() => import("./pages/ServicesPage"));
+const ErpPage = lazy(() => import("./pages/ErpPage"));
 const ProductsPage = lazy(() => import("./pages/ProductsPage"));
 const ProjectsPage = lazy(() => import("./pages/ProjectsPage"));
 const BlogPage = lazy(() => import("./pages/BlogPage"));
@@ -41,6 +42,7 @@ function Router() {
           <Route path="/" component={Home} />
           <Route path="/about" component={AboutPage} />
           <Route path="/services" component={ServicesPage} />
+          <Route path="/digital-solutions/erp" component={ErpPage} />
           <Route path="/products" component={ProductsPage} />
           <Route path="/projects" component={ProjectsPage} />
           <Route path="/blog" component={BlogPage} />

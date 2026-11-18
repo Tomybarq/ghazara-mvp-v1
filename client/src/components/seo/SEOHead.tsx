@@ -94,7 +94,7 @@ export default function SEOHead({
         document.head.appendChild(scriptTag);
       }
 
-      const structuredData = {
+      const structuredData: { "@context": string; "@graph": Record<string, unknown>[] } = {
         "@context": "https://schema.org",
         "@graph": [
           {
@@ -161,6 +161,29 @@ export default function SEOHead({
           },
         ],
       };
+
+      if (pageKey === "erp") {
+        structuredData["@graph"].push(
+          {
+            "@type": "Service",
+            "@id": `${canonicalUrl}#service`,
+            "name": isAr ? "حلول غزارة الرقمية ونظام ERP" : "Ghazara Digital Solutions & ERP",
+            "serviceType": "Enterprise Resource Planning (ERP)",
+            "provider": { "@id": `${SITE_URL}/#organization` },
+            "areaServed": ["YE", "SA", "AE", "OM", "QA", "KW", "BH"],
+            "description": pageDescription,
+          },
+          {
+            "@type": "BreadcrumbList",
+            "@id": `${canonicalUrl}#breadcrumb`,
+            "itemListElement": [
+              { "@type": "ListItem", "position": 1, "name": isAr ? "الرئيسية" : "Home", "item": `${SITE_URL}/` },
+              { "@type": "ListItem", "position": 2, "name": isAr ? "الخدمات" : "Services", "item": `${SITE_URL}/services` },
+              { "@type": "ListItem", "position": 3, "name": isAr ? "الحلول الرقمية وERP" : "Digital Solutions & ERP", "item": canonicalUrl },
+            ],
+          },
+        );
+      }
 
       scriptTag.text = JSON.stringify(structuredData);
     }

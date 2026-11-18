@@ -4,6 +4,7 @@ export type AppRoute =
   | "/"
   | "/about"
   | "/services"
+  | "/digital-solutions/erp"
   | "/products"
   | "/projects"
   | "/blog"
@@ -62,6 +63,18 @@ export const navigationItems: NavItem[] = [
       en: "Integrated commercial, marketing, and technical services matrix",
     },
     showInHeader: true,
+    showInFooter: true,
+  },
+  {
+    id: "erp",
+    href: "/digital-solutions/erp",
+    label: { ar: "الحلول الرقمية وERP", en: "Digital Solutions & ERP" },
+    breadcrumbLabel: { ar: "الحلول الرقمية وERP", en: "Digital Solutions & ERP" },
+    description: {
+      ar: "حلول تخطيط موارد المؤسسات والتنفيذ والدعم التقني",
+      en: "Enterprise resource planning solutions, delivery, and technical support",
+    },
+    showInHeader: false,
     showInFooter: true,
   },
   {
