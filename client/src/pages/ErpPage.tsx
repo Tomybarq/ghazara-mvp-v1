@@ -23,8 +23,6 @@ export default function ErpPage() {
       <Header />
 
       <main className="flex-1">
-        <ErpHero />
-
         <div className="content-wrap pt-8">
           <SiteBreadcrumb
             items={[
@@ -36,6 +34,8 @@ export default function ErpPage() {
             ]}
           />
         </div>
+
+        <ErpHero />
 
         <ErpChallenges />
         <ErpWhyGhazara />

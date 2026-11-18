@@ -15,8 +15,8 @@ export default function ErpMethodology() {
         <ErpSectionHeading
           eyebrow={{ ar: "منهجية التنفيذ", en: "Implementation methodology" }}
           title={{
-            ar: "خمس مراحل واضحة من التشخيص إلى التحسين",
-            en: "Five clear phases from diagnosis to optimisation",
+            ar: "أربع مراحل واضحة من التشخيص إلى التحسين",
+            en: "Four clear phases from diagnosis to optimisation",
           }}
           desc={{
             ar: "كل مرحلة لها نطاق وتسليمات واختبار قبول قبل الانتقال — تعرف دائماً أين أنت وماذا يأتي بعد ذلك.",
@@ -24,7 +24,7 @@ export default function ErpMethodology() {
           }}
         />
 
-        <ol className="erp-phase-track mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-5">
+        <ol className="erp-phase-track mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-5">
           {erpPhases.map((phase) => (
             <li key={phase.id} className="relative flex flex-col gap-4">
               <div className="flex items-center gap-3">

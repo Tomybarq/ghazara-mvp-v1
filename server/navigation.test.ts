@@ -8,6 +8,7 @@ describe("Navigation Manifest & Route Integrity", () => {
       "/",
       "/about",
       "/services",
+      "/digital-solutions/erp",
       "/products",
       "/projects",
       "/blog",

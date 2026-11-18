@@ -133,6 +133,26 @@ export default function ServicesPage() {
             ))}
           </div>
 
+          <div className="mt-10 rounded-3xl border border-primary/15 bg-primary/5 p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
+            <div className="space-y-2">
+              <p className="eyebrow">{isAr ? "حلول رقمية متخصصة" : "Specialised digital solutions"}</p>
+              <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
+                {isAr ? "استكشف حلول غزارة الرقمية ونظام ERP" : "Explore Ghazara Digital Solutions & ERP"}
+              </h2>
+              <p className="text-sm text-muted-foreground leading-relaxed max-w-2xl">
+                {isAr
+                  ? "منصة موحدة تربط المالية والمخازن والموارد البشرية والمبيعات والتقارير داخل مؤسستك."
+                  : "A unified platform connecting finance, inventory, HR, sales and reporting across your organisation."}
+              </p>
+            </div>
+            <Link
+              href="/digital-solutions/erp"
+              className="route-button route-button-outline px-6 py-3 text-sm font-bold shrink-0"
+            >
+              {isAr ? "استعراض الحلول الرقمية" : "View digital solutions"}
+            </Link>
+          </div>
+
           <div className="mt-16 text-center bg-card border border-border rounded-3xl p-10 max-w-3xl mx-auto space-y-5 shadow-sm">
             <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-600 flex items-center justify-center mx-auto font-bold">
               <Sparkles className="w-6 h-6" />
@@ -168,4 +188,3 @@ export default function ServicesPage() {
     </div>
   );
 }
-

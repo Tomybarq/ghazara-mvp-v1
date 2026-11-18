@@ -32,6 +32,17 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://ghazara.net/services?lang=en" />
   </url>
 
+  <!-- Digital Solutions & ERP -->
+  <url>
+    <loc>https://ghazara.net/digital-solutions/erp</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghazara.net/digital-solutions/erp" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghazara.net/digital-solutions/erp?lang=en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghazara.net/digital-solutions/erp" />
+  </url>
+
   <!-- Products & Platforms -->
   <url>
     <loc>https://ghazara.net/products</loc>

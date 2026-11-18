@@ -64,22 +64,15 @@ export const siteSeoData: Record<string, PageMetadata> = {
   },
   erp: {
     title: {
-      ar: "غزارة للحلول الرقمية — أنظمة ERP المتكاملة | مؤسسة غزارة",
-      en: "Ghazara Digital Solutions — Integrated ERP Systems | Ghazara",
+      ar: "حلول غزارة الرقمية | نظام ERP في اليمن",
+      en: "Ghazara Digital Solutions | Enterprise ERP in Yemen",
     },
     description: {
-      ar: "نظام تخطيط موارد مؤسسية (ERP) متكامل من غزارة للحلول الرقمية: المالية والمخزون والمبيعات والمشتريات والموارد البشرية في منصة واحدة، مع تنفيذ مرحلي ودعم محلي في اليمن ودول الخليج.",
-      en: "An integrated ERP platform from Ghazara Digital Solutions: finance, inventory, sales, procurement and HR in one system, with phased delivery and local support across Yemen and the GCC.",
+      ar: "اكتشف حلول غزارة الرقمية لإدارة موارد المؤسسات: المحاسبة والمخازن والموارد البشرية ونقاط البيع والتقارير، مع تنفيذ وتدريب ودعم فني.",
+      en: "Discover Ghazara's enterprise solutions for finance, inventory, HR, POS and reporting, with implementation, training and technical support.",
     },
     keywords: {
-      ar: [
-        "نظام ERP",
-        "تخطيط موارد المؤسسات",
-        "برنامج محاسبة ومخزون",
-        "غزارة للحلول الرقمية",
-        "أنظمة إدارة الشركات اليمن",
-        "ERP الخليج",
-      ],
+      ar: ["نظام ERP في اليمن", "برنامج إدارة موارد المؤسسات", "حلول غزارة الرقمية", "نظام محاسبي متكامل", "إدارة المخازن", "نقاط البيع", "تطبيقات إدارة الأعمال"],
       en: [
         "ERP System",
         "Enterprise Resource Planning",
