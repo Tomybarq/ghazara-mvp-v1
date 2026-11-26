@@ -24,6 +24,9 @@ const ErpPage = lazy(() => import("./pages/ErpPage"));
 const ProductsPage = lazy(() => import("./pages/ProductsPage"));
 const ProjectsPage = lazy(() => import("./pages/ProjectsPage"));
 const BlogPage = lazy(() => import("./pages/BlogPage"));
+const ArticlePage = lazy(() => import("./pages/ArticlePage"));
+const BlogAdmin = lazy(() => import("./pages/admin/BlogAdmin"));
+const InboxPage = lazy(() => import("./pages/admin/InboxPage"));
 const ContactPage = lazy(() => import("./pages/ContactPage"));
 const RequestQuotePage = lazy(() => import("./pages/RequestQuotePage"));
 const Hub = lazy(() => import("./pages/Hub"));
@@ -46,10 +49,13 @@ function Router() {
           <Route path="/products" component={ProductsPage} />
           <Route path="/projects" component={ProjectsPage} />
           <Route path="/blog" component={BlogPage} />
+          <Route path="/blog/:slug" component={ArticlePage} />
           <Route path="/contact" component={ContactPage} />
           <Route path="/request-quote" component={RequestQuotePage} />
           <Route path="/hub" component={Hub} />
           <Route path="/dashboard" component={Dashboard} />
+          <Route path="/dashboard/blog" component={BlogAdmin} />
+          <Route path="/dashboard/inbox" component={InboxPage} />
           <Route path="/faq" component={FaqPage} />
           <Route path="/terms" component={TermsPage} />
           <Route path="/privacy" component={PrivacyPage} />

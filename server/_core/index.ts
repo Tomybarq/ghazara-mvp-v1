@@ -3,6 +3,7 @@ import { createServer } from "http";
 import net from "net";
 import { serveStatic, setupVite } from "./vite";
 import { createApp } from "../app";
+import { seedBlogContent } from "../seedBlog";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -32,6 +33,11 @@ async function startServer() {
   } else {
     serveStatic(app);
   }
+
+  // Idempotent starter content for the Insights & Blog section.
+  await seedBlogContent().catch(error => {
+    console.warn("[Seed] Blog starter content was not inserted:", error);
+  });
 
   const preferredPort = parseInt(process.env.PORT || "3000");
   const port = await findAvailablePort(preferredPort);

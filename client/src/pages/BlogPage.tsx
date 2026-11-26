@@ -1,42 +1,45 @@
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { blogPostsData } from "@/data/blog";
+import { trpc } from "@/lib/trpc";
+import { articleSummary, articleTitle } from "@/lib/blog";
+import ArticleCard from "@/components/blog/ArticleCard";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/seo/SEOHead";
 import SiteBreadcrumb from "@/components/ui/SiteBreadcrumb";
-import { Calendar, Clock, User, Search, BookOpen } from "lucide-react";
+import { BookOpen, RefreshCw, Search } from "lucide-react";
 
 export default function BlogPage() {
   const { lang, isAr } = useLanguage();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
 
-  const categories = [
-    { id: "all", label: { ar: "جميع المقالات", en: "All Articles" } },
-    { id: "trade", label: { ar: "التجارة والتمثيل التجاري", en: "Trade & Commerce" } },
-    { id: "tech", label: { ar: "التكنولوجيا والمنصات", en: "Tech & Platforms" } },
-    { id: "marketing", label: { ar: "التسويق الرقمي", en: "Digital Marketing" } },
-  ];
+  const { data: posts, isLoading, isError, refetch } = trpc.blog.list.useQuery();
+  const { data: categories } = trpc.blog.categories.useQuery();
 
   const filteredPosts = useMemo(() => {
-    return blogPostsData.filter((post) => {
+    const list = posts ?? [];
+    const query = searchQuery.trim().toLowerCase();
+
+    return list.filter(article => {
       const matchesCategory =
-        selectedCategory === "all" ||
-        (selectedCategory === "trade" && (post.category.ar.includes("تجارة") || post.category.en.includes("Trade"))) ||
-        (selectedCategory === "tech" && (post.category.ar.includes("تقنية") || post.category.en.includes("Tech") || post.category.en.includes("SaaS"))) ||
-        (selectedCategory === "marketing" && (post.category.ar.includes("تسويق") || post.category.en.includes("Marketing")));
+        selectedCategory === "all" || article.category?.slug === selectedCategory;
+      if (!matchesCategory) return false;
+      if (!query) return true;
 
-      const q = searchQuery.toLowerCase().trim();
-      const matchesSearch =
-        !q ||
-        post.title[lang].toLowerCase().includes(q) ||
-        post.excerpt[lang].toLowerCase().includes(q) ||
-        post.author[lang].toLowerCase().includes(q);
+      const haystack = [
+        articleTitle(article, lang),
+        articleSummary(article, lang),
+        article.author,
+        article.category?.name ?? "",
+        ...article.tags.map(tag => tag.name),
+      ]
+        .join(" ")
+        .toLowerCase();
 
-      return matchesCategory && matchesSearch;
+      return haystack.includes(query);
     });
-  }, [selectedCategory, searchQuery, lang]);
+  }, [posts, selectedCategory, searchQuery, lang]);
 
   return (
     <div className="site-shell bg-background text-foreground min-h-screen flex flex-col">
@@ -61,6 +64,13 @@ export default function BlogPage() {
                 ? "مقالات تحليلية وخبرات عملية يقدمها فريق غزارة في مجالات التجارة، التسويق الرقمي، وتقنية المعلومات."
                 : "Analytical articles and actionable intelligence from Ghazara experts across modern trade, digital growth, and enterprise IT."}
             </p>
+            {!isLoading && !isError && (posts?.length ?? 0) > 0 && (
+              <p className="mt-4 text-xs font-semibold text-primary">
+                {isAr
+                  ? `${posts?.length} مقالات منشورة`
+                  : `${posts?.length} published ${posts?.length === 1 ? "article" : "articles"}`}
+              </p>
+            )}
           </div>
         </section>
 
@@ -68,20 +78,31 @@ export default function BlogPage() {
         <section className="content-wrap pb-6 border-t border-border pt-8">
           <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
             <div className="flex flex-wrap gap-2">
-              {categories.map((cat) => {
-                const isActive = selectedCategory === cat.id;
+              <button
+                type="button"
+                onClick={() => setSelectedCategory("all")}
+                className={`px-4 py-2 rounded-2xl text-xs font-heading font-semibold transition cursor-pointer ${
+                  selectedCategory === "all"
+                    ? "bg-primary text-primary-foreground shadow-xs"
+                    : "bg-card border border-border text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {isAr ? "جميع المقالات" : "All Articles"}
+              </button>
+              {(categories ?? []).map(category => {
+                const isActive = selectedCategory === category.slug;
                 return (
                   <button
-                    key={cat.id}
+                    key={category.id}
                     type="button"
-                    onClick={() => setSelectedCategory(cat.id)}
+                    onClick={() => setSelectedCategory(category.slug)}
                     className={`px-4 py-2 rounded-2xl text-xs font-heading font-semibold transition cursor-pointer ${
                       isActive
                         ? "bg-primary text-primary-foreground shadow-xs"
                         : "bg-card border border-border text-muted-foreground hover:text-foreground"
                     }`}
                   >
-                    {cat.label[lang]}
+                    {category.name}
                   </button>
                 );
               })}
@@ -92,7 +113,7 @@ export default function BlogPage() {
               <input
                 type="text"
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={e => setSearchQuery(e.target.value)}
                 placeholder={isAr ? "ابحث في المقالات..." : "Search articles..."}
                 aria-label={isAr ? "ابحث في المقالات" : "Search articles"}
                 className="w-full h-10 rounded-2xl border border-border bg-card rtl:pr-9 rtl:pl-4 ltr:pl-9 ltr:pr-4 text-xs text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary transition"
@@ -103,57 +124,58 @@ export default function BlogPage() {
 
         {/* Posts Grid */}
         <section className="content-wrap py-6">
-          {filteredPosts.length === 0 ? (
+          {isLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[0, 1, 2].map(index => (
+                <div
+                  key={index}
+                  className="animate-pulse overflow-hidden rounded-3xl border border-border bg-card"
+                >
+                  <div className="aspect-[16/9] bg-muted" />
+                  <div className="space-y-3 p-6">
+                    <div className="h-3 w-24 rounded bg-muted" />
+                    <div className="h-5 w-full rounded bg-muted" />
+                    <div className="h-3 w-4/5 rounded bg-muted" />
+                    <div className="h-3 w-2/3 rounded bg-muted" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : isError ? (
+            <div className="bg-card border border-border rounded-3xl p-12 text-center space-y-3">
+              <h3 className="font-heading font-bold text-lg">
+                {isAr ? "تعذر تحميل المقالات" : "Couldn't load the articles"}
+              </h3>
+              <p className="text-xs text-muted-foreground">
+                {isAr
+                  ? "حدث خطأ أثناء جلب المقالات من الخادم. حاول مرة أخرى."
+                  : "Something went wrong while fetching articles. Please try again."}
+              </p>
+              <button
+                type="button"
+                onClick={() => refetch()}
+                className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground"
+              >
+                <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" />
+                {isAr ? "إعادة المحاولة" : "Retry"}
+              </button>
+            </div>
+          ) : filteredPosts.length === 0 ? (
             <div className="bg-card border border-border rounded-3xl p-12 text-center space-y-3">
               <BookOpen className="w-10 h-10 text-muted-foreground mx-auto" />
               <h3 className="font-heading font-bold text-lg">
                 {isAr ? "لا توجد مقالات مطابقة لبحثك" : "No matching articles found"}
               </h3>
               <p className="text-xs text-muted-foreground">
-                {isAr ? "جرب البحث بكلمات أخرى أو اختر جميع المقالات." : "Try adjusting your query or category selection."}
+                {isAr
+                  ? "جرب البحث بكلمات أخرى أو اختر جميع المقالات."
+                  : "Try adjusting your query or category selection."}
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {filteredPosts.map((art) => (
-                <article
-                  key={art.id}
-                  className="bg-card border border-border rounded-3xl p-8 shadow-xs flex flex-col justify-between space-y-6 transition-all hover:border-primary/40"
-                >
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between text-xs text-muted-foreground">
-                      <span className="flex items-center gap-1">
-                        <Calendar className="w-3.5 h-3.5 text-primary" />
-                        {art.date[lang]}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Clock className="w-3.5 h-3.5 text-amber-500" />
-                        {art.readTime[lang]}
-                      </span>
-                    </div>
-
-                    <span className="inline-block px-2.5 py-1 rounded-full bg-primary/10 text-primary text-[11px] font-bold">
-                      {art.category[lang]}
-                    </span>
-
-                    <h3 className="font-heading font-bold text-xl leading-snug text-foreground">
-                      {art.title[lang]}
-                    </h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      {art.excerpt[lang]}
-                    </p>
-                  </div>
-
-                  <div className="pt-4 border-t border-border flex items-center justify-between text-xs">
-                    <span className="text-muted-foreground flex items-center gap-1">
-                      <User className="w-3.5 h-3.5 text-primary" />
-                      {art.author[lang]}
-                    </span>
-                    <span className="font-semibold text-primary">
-                      {isAr ? "مقال معتمد" : "Verified Article"}
-                    </span>
-                  </div>
-                </article>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredPosts.map(article => (
+                <ArticleCard key={article.id} article={article} lang={lang} isAr={isAr} />
               ))}
             </div>
           )}
