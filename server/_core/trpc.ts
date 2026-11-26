@@ -27,6 +27,24 @@ const requireUser = t.middleware(async opts => {
 
 export const protectedProcedure = t.procedure.use(requireUser);
 
+/**
+ * Blog / inbox management.
+ *
+ * This dev environment has no OAuth server configured, so `auth.me` returns
+ * `null` and the dashboard runs as a guest (see AGENTS.md). Management stays
+ * reachable in that mode; as soon as an OAuth server is configured only an
+ * authenticated admin may write.
+ */
+export const contentEditorProcedure = t.procedure.use(
+  t.middleware(async opts => {
+    const authConfigured = Boolean(process.env.OAUTH_SERVER_URL);
+    if (authConfigured && opts.ctx.user?.role !== 'admin') {
+      throw new TRPCError({ code: 'FORBIDDEN', message: NOT_ADMIN_ERR_MSG });
+    }
+    return opts.next();
+  }),
+);
+
 export const adminProcedure = t.procedure.use(
   t.middleware(async opts => {
     const { ctx, next } = opts;

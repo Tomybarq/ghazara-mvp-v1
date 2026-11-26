@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/sidebar";
 import { startLogin } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, LogOut, PanelLeft, Github } from "lucide-react";
+import { LayoutDashboard, LogOut, PanelLeft, Github, FileText, Inbox } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
@@ -30,6 +30,8 @@ import { ConfirmationDialog } from "./ui/ConfirmationDialog";
 
 const menuItems = [
   { icon: Github, label: "GitHub Activity", path: "/dashboard" },
+  { icon: FileText, label: "Articles", path: "/dashboard/blog" },
+  { icon: Inbox, label: "Inbox", path: "/dashboard/inbox" },
 ];
 
 const SIDEBAR_WIDTH_KEY = "sidebar-width";

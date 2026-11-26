@@ -86,8 +86,10 @@ export const githubRouter = router({
     ]);
 
     const repo = repoRes.ok ? repoRes.data : null;
-    const commits = commitsRes.ok ? commitsRes.data : [];
-    const activity = activityRes.ok ? activityRes.data : [];
+    // GitHub returns 202 with a non-array body while commit stats are being
+    // computed, so only accept a real array.
+    const commits = commitsRes.ok && Array.isArray(commitsRes.data) ? commitsRes.data : [];
+    const activity = activityRes.ok && Array.isArray(activityRes.data) ? activityRes.data : [];
 
     // Summarize the last 12 weeks of activity for a sparkline.
     const recentActivity = activity.slice(-12).map((a) => ({
